@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForestGH · Issue Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<style>
+:root {
+  --bg:#f5f9f5;--surface:#ffffff;--surface2:#f0f6f0;--surface3:#e8f2e8;
+  --border:#d0e4d0;--border2:#b8d4b8;
+  --accent:#1a8c3a;--accent2:#14702e;--accent-dim:rgba(26,140,58,.09);
+  --text:#1a2e1a;--muted:#6a8c6a;--muted2:#9ab89a;
+  --danger:#d93025;--warn:#e07b00;--info:#1a73c8;
+  --low:#1a8c3a;--med:#e07b00;--high:#d93025;
+  --open:#1a73c8;--closed:#1a8c3a;--wip:#e07b00;
+  --purple:#7c3aed;
+  --sidebar-bg:#1a3320;--sidebar-text:#c8e6c9;--sidebar-muted:#6a9c6a;
+  --sidebar-border:#2a4a2a;--sidebar-active:rgba(255,255,255,.10);
+  --font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
+  --radius:6px;--tr:.18s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font-mono);font-size:13px;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='10' cy='50' r='2' fill='%231a8c3a' opacity='.06'/%3E%3Ccircle cx='30' cy='30' r='1.5' fill='%231a8c3a' opacity='.05'/%3E%3Ccircle cx='50' cy='10' r='2' fill='%231a8c3a' opacity='.06'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+.layout{display:flex;min-height:100vh;position:relative;z-index:1}
+
+/* ── Sidebar ── */
+.sidebar{width:224px;flex-shrink:0;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:18px 14px 14px;border-bottom:1px solid var(--sidebar-border);display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#2ecc71,#1a8c3a);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.logo-text h1{font-family:var(--font-head);font-size:15px;font-weight:800;letter-spacing:-.3px;line-height:1;color:#fff}
+.logo-text small{font-size:9px;color:var(--sidebar-muted);letter-spacing:1.5px;text-transform:uppercase}
+.nav-section{padding:14px 10px 6px}
+.nav-label{font-size:9px;color:var(--sidebar-muted);letter-spacing:2px;text-transform:uppercase;padding:0 6px;margin-bottom:5px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius);cursor:pointer;color:var(--sidebar-muted);font-size:11px;font-weight:700;letter-spacing:.3px;transition:all var(--tr);margin-bottom:2px;user-select:none}
+.nav-item:hover{background:rgba(255,255,255,.08);color:var(--sidebar-text)}
+.nav-item.active{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.nav-icon{width:18px;text-align:center;font-size:13px;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--danger);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
+.nav-badge.g{background:var(--accent2)}.nav-badge.b{background:var(--info)}
+.cu-panel{margin:auto 0 0;padding:12px;border-top:1px solid var(--sidebar-border)}
+.cu-label{font-size:9px;color:var(--sidebar-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}
+.cu-panel select{width:100%;background:rgba(255,255,255,.08);border:1px solid var(--sidebar-border);color:var(--sidebar-text);font-family:var(--font-mono);font-size:11px;padding:7px 24px 7px 9px;border-radius:var(--radius);outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a9c6a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-color:rgba(255,255,255,.08);cursor:pointer}
+.cu-panel select:focus{border-color:rgba(255,255,255,.3)}
+.cu-panel select option{background:#1a3320;color:#c8e6c9}
+.cu-who{margin-top:6px;font-size:10px;color:var(--sidebar-muted);min-height:14px}
+
+/* ── Main ── */
+.main{flex:1;overflow-x:auto;padding:0 22px 40px;min-width:0}
+
+/* ── Page header ── */
+.page-header{display:flex;align-items:center;justify-content:space-between;padding:22px 0 18px;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.page-title{font-family:var(--font-head);font-size:19px;font-weight:800;letter-spacing:-.3px}
+.page-title small{color:var(--muted);font-size:12px;font-weight:400;margin-left:8px;font-family:var(--font-mono)}
+.hdr-actions{display:flex;gap:7px;flex-wrap:wrap}
+
+/* ── Buttons ── */
+.btn{font-family:var(--font-mono);font-size:11px;font-weight:700;border:none;border-radius:var(--radius);cursor:pointer;transition:all var(--tr);letter-spacing:.4px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-primary{background:var(--accent);color:#fff;padding:8px 15px;box-shadow:0 2px 8px rgba(26,140,58,.25)}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,140,58,.3)}
+.btn-ghost{background:#fff;color:var(--muted);border:1px solid var(--border);padding:7px 13px}
+.btn-ghost:hover{color:var(--text);border-color:var(--accent);background:var(--surface2)}
+.btn-danger{background:var(--danger);color:#fff;padding:5px 10px}
+.btn-danger:hover{background:#c0271d;transform:translateY(-1px)}
+.btn-sm{padding:5px 9px;font-size:10px}
+.btn-xs{padding:3px 8px;font-size:10px}
+
+/* ── Stats ── */
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:9px;margin-bottom:18px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px;position:relative;overflow:hidden;transition:all var(--tr);box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.c-total::after{background:var(--accent)}.c-open::after{background:var(--open)}.c-wip::after{background:var(--wip)}.c-closed::after{background:var(--closed)}.c-high::after{background:var(--high)}.c-users::after{background:var(--purple)}
+.stat-card:hover{border-color:var(--accent);box-shadow:0 3px 10px rgba(26,140,58,.12);transform:translateY(-1px)}
+.stat-num{font-family:var(--font-head);font-size:26px;font-weight:800;line-height:1;margin-bottom:2px}
+.c-total .stat-num{color:var(--accent)}.c-open .stat-num{color:var(--open)}.c-wip .stat-num{color:var(--wip)}.c-closed .stat-num{color:var(--closed)}.c-high .stat-num{color:var(--high)}.c-users .stat-num{color:var(--purple)}
+.stat-label{color:var(--muted);font-size:9px;letter-spacing:1.5px;text-transform:uppercase}
+
+/* ── Progress ── */
+.progress-wrap{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.progress-bg{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),#2ecc71);border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.progress-label{font-size:10px;color:var(--muted);white-space:nowrap}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.search-wrap{flex:1;min-width:170px;position:relative}
+.search-wrap input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-mono);font-size:11px;padding:7px 9px 7px 32px;outline:none;transition:border-color var(--tr);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,140,58,.08)}
+.search-wrap input::placeholder{color:var(--muted2)}
+.search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;pointer-events:none}
+select{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-mono);font-size:11px;padding:7px 26px 7px 9px;outline:none;cursor:pointer;transition:border-color var(--tr);appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a8c6a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,140,58,.08)}
+
+/* ── Table ── */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;overflow-x:auto;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+table{width:100%;border-collapse:collapse;min-width:860px}
+thead tr{background:var(--surface2);border-bottom:2px solid var(--border)}
+th{font-family:var(--font-head);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:10px 11px;text-align:left;cursor:pointer;user-select:none;white-space:nowrap;transition:color var(--tr)}
+th:hover{color:var(--accent)}
+th.sorted{color:var(--accent)}
+tbody tr{border-bottom:1px solid var(--border);transition:background var(--tr);animation:rowIn .2s ease both}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#f0faf2}
+@keyframes rowIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+td{padding:10px 11px;vertical-align:middle}
+.id-cell{font-weight:700;color:var(--muted);font-size:10px;width:32px}
+.module-cell{font-weight:700;color:var(--accent2);white-space:nowrap;font-size:10px}
+.desc-cell{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.badge-dot{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0}
+.p-High{background:#fff0ee;color:#b52819;border:1px solid #f4c3be}
+.p-Medium{background:#fff8ee;color:#b55c00;border:1px solid #f4d9be}
+.p-Low{background:#eef8f0;color:#1a6e30;border:1px solid #b8dfc0}
+.s-Open{background:#eef4ff;color:#1557a0;border:1px solid #b8d0f0}
+.s-Closed{background:#eef8f0;color:#1a6e30;border:1px solid #b8dfc0}
+.s-WIP{background:#fff8ee;color:#b55c00;border:1px solid #f4d9be}
+
+/* User chip */
+.user-chip{display:inline-flex;align-items:center;gap:4px;background:#eef6ee;border:1px solid var(--border);border-radius:20px;padding:2px 7px 2px 3px;font-size:10px;color:var(--text);white-space:nowrap}
+.avatar-sm{width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0;font-family:var(--font-head)}
+.unassigned{color:var(--muted2);font-size:10px;font-style:italic}
+
+.actions-cell{display:flex;gap:4px}
+.empty-state{padding:48px 20px;text-align:center;color:var(--muted)}
+.empty-state .ei{font-size:34px;margin-bottom:8px;opacity:.4}
+.empty-state p{font-family:var(--font-head);font-size:13px}
+.footer-bar{display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap;gap:6px}
+.record-count{font-size:10px;color:var(--muted)}
+
+/* ── Users view ── */
+.users-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:13px}
+.user-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;transition:all var(--tr);position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.user-card:hover{box-shadow:0 4px 14px rgba(26,140,58,.12);border-color:var(--accent);transform:translateY(-1px)}
+.uc-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.user-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0;font-family:var(--font-head)}
+.uc-info h3{font-family:var(--font-head);font-size:14px;font-weight:700;line-height:1.2;color:var(--text)}
+.uc-info .role{font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.uc-info .email{font-size:9px;color:var(--muted2);margin-top:1px}
+.uc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px}
+.uc-stat{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:7px;text-align:center}
+.uc-num{font-family:var(--font-head);font-size:17px;font-weight:700;line-height:1}
+.uc-lbl{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.pending-section{border-top:1px solid var(--border);padding-top:9px}
+.pending-title{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.pending-row{display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:1px solid var(--border);font-size:10px}
+.pending-row:last-child{border-bottom:none}
+.pending-desc{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.uc-actions{display:flex;gap:5px;margin-top:9px}
+
+/* ── History view ── */
+.history-list{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.h-item{display:grid;grid-template-columns:16px 1fr auto;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);align-items:start;animation:rowIn .18s ease both}
+.h-item:last-child{border-bottom:none}
+.h-item:hover{background:#f5fbf5}
+.h-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.dot-create{background:var(--accent)}.dot-edit{background:var(--warn)}.dot-delete{background:var(--danger)}.dot-assign{background:var(--purple)}
+.h-title{font-size:11px;color:var(--text);line-height:1.4}
+.h-meta{font-size:10px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.h-time{font-size:9px;color:var(--muted2);white-space:nowrap}
+.h-empty{padding:40px;text-align:center;color:var(--muted);font-size:12px}
+
+/* ── Modal ── */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(10,40,10,.4);z-index:100;backdrop-filter:blur(3px)}
+.modal-backdrop.open{display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;width:100%;max-width:520px;animation:modalIn .2s cubic-bezier(.4,0,.2,1);box-shadow:0 16px 40px rgba(0,0,0,.16),0 0 0 1px rgba(26,140,58,.08)}
+@keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--border);background:var(--surface2);border-radius:12px 12px 0 0}
+.modal-head h2{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--text)}
+.close-btn{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer;transition:color var(--tr);padding:0 3px}
+.close-btn:hover{color:var(--danger)}
+.modal-body{padding:18px 20px;display:flex;flex-direction:column;gap:13px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.form-group input,.form-group select,.form-group textarea{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-mono);font-size:11px;padding:8px 9px;outline:none;transition:all var(--tr);width:100%;appearance:none;-webkit-appearance:none}
+.form-group select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a8c6a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-color:var(--bg);padding-right:24px}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,140,58,.08)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--muted2)}
+.form-group textarea{resize:vertical;min-height:68px}
+.modal-foot{display:flex;justify-content:flex-end;gap:7px;padding:12px 20px 18px;border-top:1px solid var(--border)}
+.confirm-box{padding:18px 20px;text-align:center}
+.confirm-box .warn-icon{font-size:28px;margin-bottom:7px}
+.confirm-box p{margin-bottom:16px;color:var(--text);line-height:1.6;font-size:11px}
+.confirm-actions{display:flex;justify-content:center;gap:7px}
+
+/* ── Toast ── */
+.toast-ct{position:fixed;bottom:18px;right:18px;z-index:200;display:flex;flex-direction:column;gap:5px}
+.toast{background:#fff;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:9px 13px;font-size:11px;max-width:250px;animation:toastIn .2s ease;box-shadow:0 4px 16px rgba(0,0,0,.1);color:var(--text)}
+.toast.err{border-left-color:var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+
+.loading{display:flex;align-items:center;justify-content:center;gap:9px;padding:60px;color:var(--muted)}
+.spinner{width:15px;height:15px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--surface2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted2)}
+
+@media(max-width:680px){
+  .sidebar{display:none}
+  .form-row{grid-template-columns:1fr}
+  .stats-bar{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🌲</div>
+    <div class="logo-text"><h1>ForestGH</h1><small>Issue Tracker</small></div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Views</div>
+    <div class="nav-item active" onclick="switchView('issues')" id="nav-issues">
+      <span class="nav-icon">📋</span> Issues
+      <span class="nav-badge" id="nb-open">0</span>
+    </div>
+    <div class="nav-item" onclick="switchView('users')" id="nav-users">
+      <span class="nav-icon">👥</span> Users
+      <span class="nav-badge g" id="nb-users">0</span>
+    </div>
+    <div class="nav-item" onclick="switchView('history')" id="nav-history">
+      <span class="nav-icon">📜</span> History
+      <span class="nav-badge b" id="nb-hist">0</span>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Quick Filter</div>
+    <div class="nav-item" onclick="quickFilter('open')"><span class="nav-icon">🔵</span> Open</div>
+    <div class="nav-item" onclick="quickFilter('wip')"><span class="nav-icon">🟡</span> In Progress</div>
+    <div class="nav-item" onclick="quickFilter('closed')"><span class="nav-icon">🟢</span> Closed</div>
+    <div class="nav-item" onclick="quickFilter('high')"><span class="nav-icon">🔴</span> High Priority</div>
+    <div class="nav-item" onclick="quickFilter('')"><span class="nav-icon">✦</span> All Issues</div>
+  </div>
+
+  <div class="cu-panel">
+    <div class="cu-label">Active User</div>
+    <select id="currentUserSel" onchange="onCurrentUserChange()">
+      <option value="">— Select User —</option>
+    </select>
+    <div class="cu-who" id="cuWho"></div>
+  </div>
+</aside>
+
+<!-- ════════════════ MAIN ════════════════ -->
+<div class="main">
+  <div id="loadingEl" class="loading"><div class="spinner"></div> Initializing database…</div>
+  <div id="appContent" style="display:none">
+
+    <!-- ══ ISSUES VIEW ══ -->
+    <div id="view-issues">
+      <div class="page-header">
+        <div class="page-title">Issues <small id="issueSub"></small></div>
+        <div class="hdr-actions">
+          <button class="btn btn-ghost" onclick="exportCSV()">⬇ CSV</button>
+          <button class="btn btn-primary" onclick="openIssueModal()">＋ New Issue</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-card c-total"><div class="stat-num" id="s-total">0</div><div class="stat-label">Total</div></div>
+        <div class="stat-card c-open"><div class="stat-num" id="s-open">0</div><div class="stat-label">Open</div></div>
+        <div class="stat-card c-wip"><div class="stat-num" id="s-wip">0</div><div class="stat-label">WIP</div></div>
+        <div class="stat-card c-closed"><div class="stat-num" id="s-closed">0</div><div class="stat-label">Closed</div></div>
+        <div class="stat-card c-high"><div class="stat-num" id="s-high">0</div><div class="stat-label">High</div></div>
+        <div class="stat-card c-users"><div class="stat-num" id="s-users">0</div><div class="stat-label">Users</div></div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-bg"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="progress-label" id="progressLabel">0% resolved</div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="searchInput" placeholder="Search issues…" oninput="renderIssues()">
+        </div>
+        <select id="filterModule" onchange="renderIssues()"><option value="">All Modules</option></select>
+        <select id="filterPriority" onchange="renderIssues()">
+          <option value="">All Priorities</option>
+          <option>High</option><option>Medium</option><option>Low</option>
+        </select>
+        <select id="filterStatus" onchange="renderIssues()">
+          <option value="">All Status</option>
+          <option>Open</option><option>WIP</option><option>Closed</option>
+        </select>
+        <select id="filterAssignee" onchange="renderIssues()"><option value="">All Assignees</option></select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th onclick="sortBy('id')"># <span id="sa-id">↕</span></th>
+            <th onclick="sortBy('module')">Module <span id="sa-module">↕</span></th>
+            <th>Description</th>
+            <th onclick="sortBy('priority')">Priority <span id="sa-priority">↕</span></th>
+            <th onclick="sortBy('status')">Status <span id="sa-status">↕</span></th>
+            <th>Assigned To</th>
+            <th>Modified By</th>
+            <th>Remarks</th>
+            <th>Actions</th>
+          </tr></thead>
+          <tbody id="issueBody"></tbody>
+        </table>
+        <div id="emptyIssues" class="empty-state" style="display:none">
+          <div class="ei">🌿</div><p>No issues match your filters</p>
+        </div>
+      </div>
+      <div class="footer-bar">
+        <div class="record-count" id="recordCount"></div>
+        <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+      </div>
+    </div>
+
+    <!-- ══ USERS VIEW ══ -->
+    <div id="view-users" style="display:none">
+      <div class="page-header">
+        <div class="page-title">Users <small id="userCountLbl"></small></div>
+        <div class="hdr-actions">
+          <button class="btn btn-primary" onclick="openUserModal()">＋ Add User</button>
+        </div>
+      </div>
+      <div class="users-grid" id="usersGrid"></div>
+    </div>
+
+    <!-- ══ HISTORY VIEW ══ -->
+    <div id="view-history" style="display:none">
+      <div class="page-header">
+        <div class="page-title">Activity History</div>
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="histSearch" placeholder="Search history…" oninput="renderHistory()">
+        </div>
+        <select id="histUserF" onchange="renderHistory()"><option value="">All Users</option></select>
+        <select id="histTypeF" onchange="renderHistory()">
+          <option value="">All Actions</option>
+          <option value="create">Created</option>
+          <option value="edit">Edited</option>
+          <option value="assign">Assigned</option>
+          <option value="delete">Deleted</option>
+        </select>
+      </div>
+      <div class="history-list" id="historyList"></div>
+    </div>
+
+  </div>
+</div>
+</div><!-- /layout -->
+
+<!-- ════ Issue Modal ════ -->
+<div class="modal-backdrop" id="issueModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="issueModalTitle">New Issue</h2>
+      <button class="close-btn" onclick="closeIssueModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Module *</label>
+          <select id="fModule">
+            <option value="">Select…</option>
+            <option>Asset</option><option>General</option><option>Forest Fire</option>
+            <option>App / Navigation</option><option>Vanamasta</option><option>FRA</option>
+            <option>Attenadnce</option><option>General Survey</option><option>Working Plan</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Assign To</label>
+          <select id="fAssignee"><option value="">Unassigned</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Issue Description *</label>
+        <textarea id="fDesc" placeholder="Describe the issue…"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Priority *</label>
+          <select id="fPriority">
+            <option value="">Select…</option>
+            <option>High</option><option>Medium</option><option>Low</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status *</label>
+          <select id="fStatus">
+            <option value="">Select…</option>
+            <option>Open</option><option>WIP</option><option>Closed</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Remarks</label>
+        <input type="text" id="fRemarks" placeholder="Optional notes…">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeIssueModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveIssue()">Save Issue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ User Modal ════ -->
+<div class="modal-backdrop" id="userModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="userModalTitle">Add User</h2>
+      <button class="close-btn" onclick="closeUserModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editUserId">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="fUserName" placeholder="e.g. Ravi Kumar">
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select id="fUserRole">
+            <option value="">Select role…</option>
+            <option>Developer</option><option>QA Engineer</option><option>Project Manager</option>
+            <option>Team Lead</option><option>Field Officer</option><option>Analyst</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="fUserEmail" placeholder="user@example.com">
+        </div>
+        <div class="form-group">
+          <label>Avatar Color</label>
+          <select id="fUserColor">
+            <option value="#3ddc68">🟢 Forest Green</option>
+            <option value="#4fa8ff">🔵 Sky Blue</option>
+            <option value="#ffaa00">🟡 Amber</option>
+            <option value="#ff6b35">🟠 Orange</option>
+            <option value="#c084fc">🟣 Purple</option>
+            <option value="#ff5252">🔴 Red</option>
+            <option value="#00e5cc">🩵 Teal</option>
+            <option value="#f472b6">🩷 Pink</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeUserModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveUser()">Save User</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ Confirm Modal ════ -->
+<div class="modal-backdrop" id="confirmModal">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-head">
+      <h2 id="confirmTitle">Confirm</h2>
+      <button class="close-btn" onclick="closeConfirm()">✕</button>
+    </div>
+    <div class="confirm-box">
+      <div class="warn-icon">⚠️</div>
+      <p id="confirmMsg">Are you sure?</p>
+      <div class="confirm-actions">
+        <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="btn btn-danger" onclick="doConfirm()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-ct" id="toastCt"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let db;
+let sortColN = 'id', sortDirN = 'ASC';
+let currentUserId = null;
+let confirmCb = null;
+
+const SEED_USERS = [
+  [1,'Ravi Kumar','Developer','ravi@forestgh.in','#1a8c3a'],
+  [2,'Priya Nair','QA Engineer','priya@forestgh.in','#4fa8ff'],
+  [3,'Arjun Das','Team Lead','arjun@forestgh.in','#ffaa00'],
+  [4,'Meera Patel','Field Officer','meera@forestgh.in','#c084fc'],
+];
+
+const SEED_ISSUES = [
+  [1,'Asset','Back Arrow is not there each','High','Open','',null,null],
+  [2,'Asset','Image blur issue','Medium','Open','',null,null],
+  [3,'Asset','Both side camera not working','Medium','Open','',null,null],
+  [4,'Asset','Area & Perimeter shows NAN after collecting point (Android-16, Realme GT-6)','Medium','Open','',null,null],
+  [5,'Asset','Show on Map – Crash','High','Open','',null,null],
+  [6,'Asset','Oops: Create folder / Image taken before taking multiple photos. After clearing storage it works fine.','High','Open','',null,null],
+  [7,'Asset','Image blur Issues in module','Medium','Open','',null,null],
+  [8,'Asset','In each module, Back options missing/incorrect','Medium','Open','',null,null],
+  [9,'Asset','Incharge photo – Front and Back photos required','Low','Open','',null,null],
+  [10,'Asset','All Class & Category data should be cleared','High','Open','',null,null],
+  [11,'Asset','Previous reading will be shown in each screen – Loader Issues','High','Open','',null,null],
+  [12,'General','Check network connection – Loading ok or not','Medium','Open','',null,null],
+  [13,'General','Data Loader issues','','Open','',null,null],
+  [14,'General','One DB Sync Failure','High','Open','',null,null],
+  [15,'Forest Fire','Current location not shown in Fire Blue','Medium','Open','',null,null],
+  [16,'App / Navigation','Navigation Issues','High','Open','',null,null],
+  [17,'Vanamasta','Back arrow is need to be included','','Open','',null,null],
+  [18,'Vanamasta','UI Related Issues','Medium','Open','',null,null],
+  [19,'FRA','Need to check','Low','Open','',null,null],
+  [20,'Attenadnce','UI Related Issues','Low','Open','',null,null],
+  [21,'General Survey','No Back arrow is not availbe','Low','Open','',null,null],
+  [22,'Working Plan','No Back arrow is not availbe','Low','Open','',null,null],
+];
+
+// ═══════════════════════════════════════════════
+// DB INIT
+// ═══════════════════════════════════════════════
+async function initDB() {
+  const SQL = await initSqlJs({ locateFile: f=>`https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/${f}` });
+  db = new SQL.Database();
+
+  db.run(`CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL, role TEXT, email TEXT, color TEXT DEFAULT '#1a8c3a',
+    created_at TEXT DEFAULT (datetime('now'))
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS issues (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    module TEXT, description TEXT, priority TEXT, status TEXT, remarks TEXT,
+    assignee_id INTEGER, modified_by INTEGER,
+    created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY(assignee_id) REFERENCES users(id), FOREIGN KEY(modified_by) REFERENCES users(id)
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    action TEXT, issue_id INTEGER, user_id INTEGER, detail TEXT,
+    ts TEXT DEFAULT (datetime('now'))
+  )`);
+
+  const su = db.prepare(`INSERT OR IGNORE INTO users (id,name,role,email,color) VALUES (?,?,?,?,?)`);
+  SEED_USERS.forEach(r=>su.run(r)); su.free();
+
+  const si = db.prepare(`INSERT OR IGNORE INTO issues (id,module,description,priority,status,remarks,assignee_id,modified_by) VALUES (?,?,?,?,?,?,?,?)`);
+  SEED_ISSUES.forEach(r=>si.run(r)); si.free();
+
+  document.getElementById('loadingEl').style.display='none';
+  document.getElementById('appContent').style.display='block';
+  populateAllSelects();
+  renderIssues();
+  updateBadges();
+}
+
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+function q(sql, params=[]) {
+  const r=db.exec(sql,params);
+  if(!r[0]) return [];
+  return r[0].values.map(v=>Object.fromEntries(r[0].columns.map((c,i)=>[c,v[i]])));
+}
+function q1(sql, params=[]) { return (db.exec(sql,params)[0]?.values[0][0])??0; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function now(){ return new Date().toLocaleString('sv-SE'); }
+function initials(n){ return (n||'?').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase(); }
+
+function avatarSm(user) {
+  if(!user) return '';
+  return `<span class="avatar-sm" style="background:${esc(user.color)}">${esc(initials(user.name))}</span>`;
+}
+function userChip(user) {
+  if(!user) return `<span class="unassigned">Unassigned</span>`;
+  return `<span class="user-chip">${avatarSm(user)}<span>${esc(user.name)}</span></span>`;
+}
+
+function log(action, issueId, detail) {
+  db.run(`INSERT INTO history (action,issue_id,user_id,detail,ts) VALUES (?,?,?,?,?)`,
+    [action, issueId||null, currentUserId||null, detail, now()]);
+  updateBadges();
+}
+
+function toast(msg, isErr=false) {
+  const el=document.createElement('div');
+  el.className='toast'+(isErr?' err':'');
+  el.textContent=msg;
+  document.getElementById('toastCt').appendChild(el);
+  setTimeout(()=>el.remove(),3000);
+}
+
+function getUsers() { return q(`SELECT * FROM users ORDER BY name`); }
+
+// ═══════════════════════════════════════════════
+// SELECTS
+// ═══════════════════════════════════════════════
+function populateAllSelects() {
+  populateModuleFilter();
+  populateUserSelects();
+}
+
+function populateModuleFilter() {
+  const sel=document.getElementById('filterModule');
+  const cur=sel.value;
+  while(sel.options.length>1) sel.remove(1);
+  q(`SELECT DISTINCT module FROM issues WHERE module!='' ORDER BY module`)
+    .forEach(({module:m})=>sel.appendChild(new Option(m,m)));
+  sel.value=cur;
+}
+
+function populateUserSelects() {
+  const users=getUsers();
+  // filter assignee
+  const fa=document.getElementById('filterAssignee');
+  const faCur=fa.value;
+  while(fa.options.length>1) fa.remove(1);
+  fa.appendChild(new Option('Unassigned','__none__'));
+  users.forEach(u=>fa.appendChild(new Option(u.name,u.id)));
+  fa.value=faCur;
+
+  // form assignee
+  const fA=document.getElementById('fAssignee');
+  const fACur=fA.value;
+  while(fA.options.length>1) fA.remove(1);
+  users.forEach(u=>fA.appendChild(new Option(u.name,u.id)));
+  fA.value=fACur;
+
+  // sidebar current user
+  const cu=document.getElementById('currentUserSel');
+  const cuCur=cu.value;
+  while(cu.options.length>1) cu.remove(1);
+  users.forEach(u=>cu.appendChild(new Option(u.name,u.id)));
+  if(cuCur) cu.value=cuCur;
+
+  // history user filter
+  const hu=document.getElementById('histUserF');
+  const huCur=hu.value;
+  while(hu.options.length>1) hu.remove(1);
+  users.forEach(u=>hu.appendChild(new Option(u.name,u.id)));
+  hu.value=huCur;
+}
+
+// ═══════════════════════════════════════════════
+// VIEWS
+// ═══════════════════════════════════════════════
+function switchView(v) {
+  ['issues','users','history'].forEach(n=>{
+    document.getElementById('view-'+n).style.display=n===v?'block':'none';
+    document.getElementById('nav-'+n).classList.toggle('active',n===v);
+  });
+  if(v==='issues')  renderIssues();
+  if(v==='users')   renderUsers();
+  if(v==='history') renderHistory();
+}
+
+function quickFilter(val) {
+  switchView('issues');
+  document.getElementById('filterStatus').value='';
+  document.getElementById('filterPriority').value='';
+  document.getElementById('searchInput').value='';
+  if(val==='open')   document.getElementById('filterStatus').value='Open';
+  if(val==='wip')    document.getElementById('filterStatus').value='WIP';
+  if(val==='closed') document.getElementById('filterStatus').value='Closed';
+  if(val==='high')   document.getElementById('filterPriority').value='High';
+  renderIssues();
+}
+
+// ═══════════════════════════════════════════════
+// ISSUES RENDER
+// ═══════════════════════════════════════════════
+function sortBy(col) {
+  sortDirN = sortColN===col ? (sortDirN==='ASC'?'DESC':'ASC') : 'ASC';
+  sortColN=col; renderIssues();
+}
+
+function renderIssues() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const mod    = document.getElementById('filterModule').value;
+  const pri    = document.getElementById('filterPriority').value;
+  const sta    = document.getElementById('filterStatus').value;
+  const asgn   = document.getElementById('filterAssignee').value;
+
+  let where='1=1', params=[];
+  if(search){ where+=` AND (LOWER(i.description) LIKE ? OR LOWER(i.module) LIKE ? OR LOWER(i.remarks) LIKE ?)`; params.push(`%${search}%`,`%${search}%`,`%${search}%`); }
+  if(mod)   { where+=` AND i.module=?`;   params.push(mod); }
+  if(pri)   { where+=` AND i.priority=?`; params.push(pri); }
+  if(sta)   { where+=` AND i.status=?`;   params.push(sta); }
+  if(asgn==='__none__'){ where+=` AND i.assignee_id IS NULL`; }
+  else if(asgn){ where+=` AND i.assignee_id=?`; params.push(asgn); }
+
+  const issues=q(`SELECT i.*,
+    u1.name as an, u1.color as ac,
+    u2.name as mn, u2.color as mc,
+    i.updated_at as updated_at
+    FROM issues i
+    LEFT JOIN users u1 ON i.assignee_id=u1.id
+    LEFT JOIN users u2 ON i.modified_by=u2.id
+    WHERE ${where} ORDER BY i.${sortColN} ${sortDirN}`, params);
+
+  const tbody=document.getElementById('issueBody');
+  const empty=document.getElementById('emptyIssues');
+
+  if(!issues.length){
+    tbody.innerHTML=''; empty.style.display='block';
+    document.getElementById('recordCount').textContent='0 issues';
+  } else {
+    empty.style.display='none';
+    tbody.innerHTML=issues.map((iss,i)=>{
+      const aUser = iss.assignee_id ? {id:iss.assignee_id,name:iss.an,color:iss.ac} : null;
+      const mUser = iss.modified_by ? {id:iss.modified_by,name:iss.mn,color:iss.mc} : null;
+      return `<tr style="animation-delay:${i*.022}s">
+        <td class="id-cell">${iss.id}</td>
+        <td class="module-cell">${esc(iss.module||'—')}</td>
+        <td class="desc-cell" title="${esc(iss.description||'')}">${esc(iss.description||'—')}</td>
+        <td>${priorityBadge(iss.priority)}</td>
+        <td>${statusBadge(iss.status)}</td>
+        <td>${userChip(aUser)}</td>
+        <td>${mUser ? userChip(mUser) : '<span class="unassigned">—</span>'}</td>
+        <td style="color:var(--muted);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px">${esc(iss.remarks||'—')}</td>
+        <td class="actions-cell">
+          <button class="btn btn-ghost btn-sm" onclick="editIssue(${iss.id})">✎</button>
+          <button class="btn btn-danger btn-sm" onclick="askDeleteIssue(${iss.id})">✕</button>
+        </td>
+      </tr>`;
+    }).join('');
+    document.getElementById('recordCount').textContent=`${issues.length} issue${issues.length!==1?'s':''}`;
+  }
+  updateStats(); updateSortArrows();
+}
+
+function priorityBadge(p){ if(!p) return '<span style="color:var(--muted)">—</span>'; return `<span class="badge p-${p}"><span class="badge-dot"></span>${p}</span>`; }
+function statusBadge(s){ if(!s) return '<span style="color:var(--muted)">—</span>'; return `<span class="badge s-${s}"><span class="badge-dot"></span>${s}</span>`; }
+
+function updateStats() {
+  document.getElementById('s-total').textContent  = q1(`SELECT COUNT(*) FROM issues`);
+  document.getElementById('s-open').textContent   = q1(`SELECT COUNT(*) FROM issues WHERE LOWER(status)='open'`);
+  document.getElementById('s-wip').textContent    = q1(`SELECT COUNT(*) FROM issues WHERE LOWER(status)='wip'`);
+  document.getElementById('s-closed').textContent = q1(`SELECT COUNT(*) FROM issues WHERE LOWER(status)='closed'`);
+  document.getElementById('s-high').textContent   = q1(`SELECT COUNT(*) FROM issues WHERE LOWER(priority)='high'`);
+  document.getElementById('s-users').textContent  = q1(`SELECT COUNT(*) FROM users`);
+  const tot=q1(`SELECT COUNT(*) FROM issues`)||1;
+  const cls=q1(`SELECT COUNT(*) FROM issues WHERE LOWER(status)='closed'`);
+  const pct=Math.round(cls/tot*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=`${pct}% resolved`;
+}
+
+function updateBadges() {
+  document.getElementById('nb-open').textContent  = q1(`SELECT COUNT(*) FROM issues WHERE LOWER(status)='open'`);
+  document.getElementById('nb-users').textContent = q1(`SELECT COUNT(*) FROM users`);
+  document.getElementById('nb-hist').textContent  = q1(`SELECT COUNT(*) FROM history`);
+}
+
+function updateSortArrows() {
+  ['id','module','priority','status'].forEach(col=>{
+    const el=document.getElementById('sa-'+col);
+    if(!el) return;
+    el.parentElement.classList.toggle('sorted', sortColN===col);
+    el.textContent = sortColN===col ? (sortDirN==='ASC'?'↑':'↓') : '↕';
+  });
+}
+
+// ═══════════════════════════════════════════════
+// USERS RENDER
+// ═══════════════════════════════════════════════
+function renderUsers() {
+  const users=getUsers();
+  document.getElementById('userCountLbl').textContent=`(${users.length})`;
+  const grid=document.getElementById('usersGrid');
+  if(!users.length){
+    grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="ei">👤</div><p>No users yet. Add one!</p></div>'; return;
+  }
+  grid.innerHTML=users.map(u=>{
+    const total   = q1(`SELECT COUNT(*) FROM issues WHERE assignee_id=?`,[u.id]);
+    const pending = q1(`SELECT COUNT(*) FROM issues WHERE assignee_id=? AND LOWER(status)!='closed'`,[u.id]);
+    const closed  = q1(`SELECT COUNT(*) FROM issues WHERE assignee_id=? AND LOWER(status)='closed'`,[u.id]);
+    const pendingRows = q(`SELECT id,description,priority,status FROM issues WHERE assignee_id=? AND LOWER(status)!='closed' ORDER BY CASE priority WHEN 'High' THEN 1 WHEN 'Medium' THEN 2 ELSE 3 END,id LIMIT 5`,[u.id]);
+    return `<div class="user-card" style="--uc:${esc(u.color)}">
+      <div class="uc-head" style="border-top:2px solid ${esc(u.color)};border-radius:8px 8px 0 0;margin:-16px -16px 12px;padding:14px 14px 0">
+        <div class="user-avatar" style="background:${esc(u.color)}">${esc(initials(u.name))}</div>
+        <div class="uc-info">
+          <h3>${esc(u.name)}</h3>
+          <div class="role">${esc(u.role||'No role')}</div>
+          ${u.email?`<div class="email">${esc(u.email)}</div>`:''}
+        </div>
+      </div>
+      <div class="uc-stats">
+        <div class="uc-stat"><div class="uc-num" style="color:var(--accent)">${total}</div><div class="uc-lbl">Total</div></div>
+        <div class="uc-stat"><div class="uc-num" style="color:var(--warn)">${pending}</div><div class="uc-lbl">Pending</div></div>
+        <div class="uc-stat"><div class="uc-num" style="color:var(--closed)">${closed}</div><div class="uc-lbl">Closed</div></div>
+      </div>
+      ${pending>0 ? `<div class="pending-section">
+        <div class="pending-title">⏳ Pending Issues (${pending})</div>
+        ${pendingRows.map(iss=>`<div class="pending-row">
+          <span class="badge p-${iss.priority||'Low'}" style="font-size:8px;padding:1px 5px">${esc(iss.priority||'?')}</span>
+          <span class="pending-desc" title="${esc(iss.description)}">${esc(iss.description)}</span>
+          <span style="font-size:9px;color:var(--muted)">#${iss.id}</span>
+        </div>`).join('')}
+        ${pending>5?`<div style="font-size:9px;color:var(--muted);padding-top:3px">+${pending-5} more…</div>`:''}
+      </div>`:`<div style="font-size:10px;color:var(--closed);padding:7px 0;border-top:1px solid var(--border)">✓ No pending issues</div>`}
+      <div class="uc-actions">
+        <button class="btn btn-ghost btn-xs" onclick="editUser(${u.id})" style="flex:1">✎ Edit</button>
+        <button class="btn btn-ghost btn-xs" onclick="viewUserIssues(${u.id})" style="flex:1">📋 Issues</button>
+        <button class="btn btn-danger btn-xs" onclick="askDeleteUser(${u.id})">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function viewUserIssues(uid){
+  switchView('issues');
+  document.getElementById('filterAssignee').value=uid;
+  renderIssues();
+}
+
+// ═══════════════════════════════════════════════
+// HISTORY RENDER
+// ═══════════════════════════════════════════════
+function renderHistory() {
+  const search = document.getElementById('histSearch').value.toLowerCase();
+  const uid    = document.getElementById('histUserF').value;
+  const type   = document.getElementById('histTypeF').value;
+
+  let where='1=1', params=[];
+  if(uid)   { where+=` AND h.user_id=?`;  params.push(uid); }
+  if(type)  { where+=` AND h.action=?`;   params.push(type); }
+  if(search){ where+=` AND (LOWER(h.detail) LIKE ? OR LOWER(u.name) LIKE ?)`; params.push(`%${search}%`,`%${search}%`); }
+
+  const rows=q(`SELECT h.*,u.name as uname,u.color as ucolor FROM history h LEFT JOIN users u ON h.user_id=u.id WHERE ${where} ORDER BY h.id DESC LIMIT 300`, params);
+  const list=document.getElementById('historyList');
+
+  if(!rows.length){ list.innerHTML='<div class="h-empty">📜 No activity recorded yet</div>'; return; }
+
+  list.innerHTML=rows.map((r,i)=>{
+    const cls=r.action==='edit'?'dot-edit':r.action==='delete'?'dot-delete':r.action==='assign'?'dot-assign':'dot-create';
+    const actorHtml = r.uname
+      ? `<span style="display:inline-flex;align-items:center;gap:3px"><span style="width:13px;height:13px;border-radius:50%;background:${esc(r.ucolor||'#1a8c3a')};display:inline-flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff">${esc(initials(r.uname))}</span>${esc(r.uname)}</span>`
+      : '<span style="color:var(--muted)">System</span>';
+    return `<div class="h-item" style="animation-delay:${i*.018}s">
+      <div class="h-dot ${cls}" style="margin-top:5px"></div>
+      <div>
+        <div class="h-title">${esc(r.detail)}</div>
+        <div class="h-meta">${actorHtml}${r.issue_id?`<span>· Issue #${r.issue_id}</span>`:''}</div>
+      </div>
+      <div class="h-time">${r.ts||''}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+// ISSUE CRUD
+// ═══════════════════════════════════════════════
+function openIssueModal() {
+  document.getElementById('issueModalTitle').textContent='New Issue';
+  document.getElementById('editId').value='';
+  ['fModule','fDesc','fPriority','fStatus','fRemarks','fAssignee'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('issueModal').classList.add('open');
+}
+function closeIssueModal(){ document.getElementById('issueModal').classList.remove('open'); }
+
+function editIssue(id) {
+  const r=q(`SELECT * FROM issues WHERE id=?`,[id])[0];
+  if(!r) return;
+  document.getElementById('issueModalTitle').textContent=`Edit Issue #${id}`;
+  document.getElementById('editId').value=r.id;
+  document.getElementById('fModule').value=r.module||'';
+  document.getElementById('fDesc').value=r.description||'';
+  document.getElementById('fPriority').value=r.priority||'';
+  document.getElementById('fStatus').value=r.status||'';
+  document.getElementById('fRemarks').value=r.remarks||'';
+  document.getElementById('fAssignee').value=r.assignee_id||'';
+  document.getElementById('issueModal').classList.add('open');
+}
+
+function saveIssue() {
+  const id   = document.getElementById('editId').value;
+  const mod  = document.getElementById('fModule').value.trim();
+  const desc = document.getElementById('fDesc').value.trim();
+  const pri  = document.getElementById('fPriority').value;
+  const sta  = document.getElementById('fStatus').value;
+  const rem  = document.getElementById('fRemarks').value.trim();
+  const asgn = document.getElementById('fAssignee').value||null;
+
+  if(!mod||!desc||!pri||!sta){ toast('Fill all required fields (*)',true); return; }
+  const ts=now();
+
+  if(id){
+    const old=q(`SELECT * FROM issues WHERE id=?`,[id])[0]||{};
+    db.run(`UPDATE issues SET module=?,description=?,priority=?,status=?,remarks=?,assignee_id=?,modified_by=?,updated_at=? WHERE id=?`,
+      [mod,desc,pri,sta,rem,asgn,currentUserId,ts,parseInt(id)]);
+    const changes=[];
+    if(old.status!==sta) changes.push(`Status ${old.status||'?'}→${sta}`);
+    if(old.priority!==pri) changes.push(`Priority ${old.priority||'?'}→${pri}`);
+    if(String(old.assignee_id||'')!==String(asgn||'')){
+      const u=asgn?q(`SELECT name FROM users WHERE id=?`,[asgn])[0]:null;
+      changes.push(`Assigned to ${u?u.name:'Unassigned'}`);
+    }
+    const detail=changes.length?`Edited #${id}: ${changes.join(', ')}`:`Edited issue #${id}`;
+    log(changes.some(c=>c.includes('Assigned'))?'assign':'edit', id, detail);
+    toast('Issue updated ✓');
+  } else {
+    db.run(`INSERT INTO issues (module,description,priority,status,remarks,assignee_id,modified_by,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?)`,
+      [mod,desc,pri,sta,rem,asgn,currentUserId,ts,ts]);
+    const newId=q1(`SELECT last_insert_rowid()`);
+    if(asgn){
+      const u=q(`SELECT name FROM users WHERE id=?`,[asgn])[0];
+      log('assign',newId,`Created & assigned #${newId} to ${u?u.name:'user'}`);
+    } else {
+      log('create',newId,`Created issue #${newId}: "${desc.slice(0,60)}"`);
+    }
+    toast('Issue added ✓');
+  }
+  closeIssueModal(); populateModuleFilter(); renderIssues();
+}
+
+function askDeleteIssue(id) {
+  const r=q(`SELECT description FROM issues WHERE id=?`,[id])[0];
+  confirmCb=()=>{
+    log('delete',id,`Deleted issue #${id}: "${(r?.description||'').slice(0,60)}"`);
+    db.run(`DELETE FROM issues WHERE id=?`,[id]);
+    toast('Issue deleted'); renderIssues();
+  };
+  document.getElementById('confirmTitle').textContent=`Delete Issue #${id}`;
+  document.getElementById('confirmMsg').textContent=`Delete this issue? This cannot be undone.`;
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+// ═══════════════════════════════════════════════
+// USER CRUD
+// ═══════════════════════════════════════════════
+function openUserModal() {
+  document.getElementById('userModalTitle').textContent='Add User';
+  document.getElementById('editUserId').value='';
+  document.getElementById('fUserName').value='';
+  document.getElementById('fUserRole').value='';
+  document.getElementById('fUserEmail').value='';
+  document.getElementById('fUserColor').value='#1a8c3a';
+  document.getElementById('userModal').classList.add('open');
+}
+function closeUserModal(){ document.getElementById('userModal').classList.remove('open'); }
+
+function editUser(id) {
+  const r=q(`SELECT * FROM users WHERE id=?`,[id])[0];
+  if(!r) return;
+  document.getElementById('userModalTitle').textContent='Edit User';
+  document.getElementById('editUserId').value=r.id;
+  document.getElementById('fUserName').value=r.name||'';
+  document.getElementById('fUserRole').value=r.role||'';
+  document.getElementById('fUserEmail').value=r.email||'';
+  document.getElementById('fUserColor').value=r.color||'#1a8c3a';
+  document.getElementById('userModal').classList.add('open');
+}
+
+function saveUser() {
+  const id    = document.getElementById('editUserId').value;
+  const name  = document.getElementById('fUserName').value.trim();
+  const role  = document.getElementById('fUserRole').value;
+  const email = document.getElementById('fUserEmail').value.trim();
+  const color = document.getElementById('fUserColor').value;
+  if(!name){ toast('Name is required.',true); return; }
+  if(id){
+    db.run(`UPDATE users SET name=?,role=?,email=?,color=? WHERE id=?`,[name,role,email,color,parseInt(id)]);
+    toast('User updated ✓');
+  } else {
+    db.run(`INSERT INTO users (name,role,email,color) VALUES (?,?,?,?)`,[name,role,email,color]);
+    toast('User added ✓');
+  }
+  closeUserModal(); populateUserSelects(); renderUsers(); updateBadges();
+}
+
+function askDeleteUser(id) {
+  const u=q(`SELECT * FROM users WHERE id=?`,[id])[0];
+  confirmCb=()=>{
+    db.run(`UPDATE issues SET assignee_id=NULL WHERE assignee_id=?`,[id]);
+    db.run(`DELETE FROM users WHERE id=?`,[id]);
+    toast('User deleted'); populateUserSelects(); renderUsers(); renderIssues(); updateBadges();
+  };
+  document.getElementById('confirmTitle').textContent=`Delete ${u?.name||'User'}`;
+  document.getElementById('confirmMsg').textContent=`Delete "${u?.name}"? Their assigned issues will become unassigned.`;
+  document.getElementById('confirmModal').classList.add('open');
+}
+
+// ═══════════════════════════════════════════════
+// CURRENT USER
+// ═══════════════════════════════════════════════
+function onCurrentUserChange() {
+  currentUserId = document.getElementById('currentUserSel').value||null;
+  if(currentUserId){
+    const u=q(`SELECT name,color FROM users WHERE id=?`,[currentUserId])[0];
+    document.getElementById('cuWho').innerHTML=u
+      ?`<span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:14px;border-radius:50%;background:${esc(u.color)};display:inline-flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff">${esc(initials(u.name))}</span><span style="color:var(--accent)">${esc(u.name)}</span></span>`:''
+    toast(`Logged in as ${u?.name||'Unknown'}`);
+  } else {
+    document.getElementById('cuWho').textContent='';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// CONFIRM
+// ═══════════════════════════════════════════════
+function closeConfirm(){ document.getElementById('confirmModal').classList.remove('open'); confirmCb=null; }
+function doConfirm(){ if(confirmCb) confirmCb(); closeConfirm(); }
+
+// ═══════════════════════════════════════════════
+// EXPORT CSV
+// ═══════════════════════════════════════════════
+function exportCSV() {
+  const rows=q(`SELECT i.*,u1.name as assignee_name,u2.name as modifier_name FROM issues i LEFT JOIN users u1 ON i.assignee_id=u1.id LEFT JOIN users u2 ON i.modified_by=u2.id ORDER BY i.id`);
+  const hdr=['ID','Module','Description','Priority','Status','Assigned To','Modified By','Remarks','Created','Updated'];
+  const csv=[hdr,...rows.map(r=>[r.id,r.module,`"${(r.description||'').replace(/"/g,'""')}"`,r.priority,r.status,r.assignee_name||'',r.modifier_name||'',`"${(r.remarks||'').replace(/"/g,'""')}"`,r.created_at,r.updated_at])].map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='forestgh_issues.csv'; a.click();
+  toast('CSV exported ✓');
+}
+
+// ═══════════════════════════════════════════════
+// BACKDROP CLOSE
+// ═══════════════════════════════════════════════
+['issueModal','userModal','confirmModal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{
+    if(e.target!==e.currentTarget) return;
+    if(id==='confirmModal') closeConfirm();
+    else if(id==='issueModal') closeIssueModal();
+    else closeUserModal();
+  });
+});
+
+// ═══════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════
+initDB().catch(err=>{
+  document.getElementById('loadingEl').innerHTML=`<div style="color:var(--danger)">⚠ Failed: ${err.message}</div>`;
+});
+</script>
+</body>
+</html>
