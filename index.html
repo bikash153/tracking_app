@@ -3,50 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ForestGH · Issue Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<title>ORSAC · Forest Issue Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f5f9f5;--sf:#fff;--sf2:#f0f6f0;--bd:#d0e4d0;--bd2:#b8d4b8;
-  --ac:#1a8c3a;--ac2:#14702e;--tx:#1a2e1a;--mu:#6a8c6a;--mu2:#9ab89a;
-  --dg:#d93025;--wn:#e07b00;--in:#1a73c8;--pu:#7c3aed;
-  --sb:#1a3320;--sbm:#6a9c6a;--sbb:#2a4a2a;
-  --fh:'Syne',sans-serif;--fm:'Space Mono',monospace;
-  --r:6px;--tr:.18s cubic-bezier(.4,0,.2,1)
+  --bg:#f4f7f2;--sf:#ffffff;--sf2:#eef3ea;--bd:#c8d8c0;--bd2:#a8c098;
+  --ac:#1a5c2a;--ac2:#134820;--tx:#1a2a1a;--mu:#5a7a5a;--mu2:#8aaa8a;
+  --dg:#c0392b;--wn:#d4830a;--in:#003580;--pu:#5c3a8a;
+  --sb:#002147;--sbm:#7a9cc0;--sbb:#0a3060;
+  --sf-saffron:#f77f00;--sf-gold:#ffc000;--sf-cream:#fdf6e3;
+  --fh:'Inter',sans-serif;--fm:'Noto Serif',serif;
+  --r:5px;--tr:.18s cubic-bezier(.4,0,.2,1)
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--tx);font-family:var(--fm);font-size:13px;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='10' cy='50' r='2' fill='%231a8c3a' opacity='.04'/%3E%3Ccircle cx='50' cy='10' r='2' fill='%231a8c3a' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%23003580' opacity='.04'/%3E%3Ccircle cx='50' cy='50' r='1.5' fill='%231a5c2a' opacity='.04'/%3E%3Ccircle cx='70' cy='20' r='1' fill='%23f77f00' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
 .ly{display:flex;min-height:100vh;position:relative;z-index:1}
 
 /* Sidebar */
 .sb{width:234px;flex-shrink:0;background:var(--sb);border-right:1px solid var(--sbb);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
 .sbl{padding:18px 14px 14px;border-bottom:1px solid var(--sbb);display:flex;align-items:center;gap:10px}
-.li{width:36px;height:36px;background:linear-gradient(135deg,#2ecc71,#1a8c3a);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.li{width:38px;height:38px;background:linear-gradient(135deg,#f77f00,#003580);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.4)}
 .lt h1{font-family:var(--fh);font-size:15px;font-weight:800;color:#fff;line-height:1}
 .lt small{font-size:9px;color:var(--sbm);letter-spacing:1.5px;text-transform:uppercase}
 .dbs{padding:6px 14px 3px;font-size:9px;font-weight:700;display:flex;align-items:center;gap:5px;color:var(--sbm)}
 .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;transition:all .3s}
-.ok{background:#2ecc71;box-shadow:0 0 6px #2ecc71}.er{background:var(--dg);box-shadow:0 0 4px var(--dg)}.ld{background:var(--wn);animation:pu 1s infinite}
+.ok{background:#22c55e;box-shadow:0 0 6px #22c55e}.er{background:var(--dg);box-shadow:0 0 4px var(--dg)}.ld{background:var(--wn);animation:pu 1s infinite}
 @keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}
-.ns{padding:10px 10px 4px}.nl{font-size:9px;color:#4a7a4a;letter-spacing:2px;text-transform:uppercase;padding:0 6px;margin-bottom:5px}
+.ns{padding:10px 10px 4px}.nl{font-size:9px;color:#5a80a8;letter-spacing:2px;text-transform:uppercase;padding:0 6px;margin-bottom:5px}
 .ni{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r);cursor:pointer;color:var(--sbm);font-size:11px;font-weight:700;transition:all var(--tr);margin-bottom:2px;user-select:none}
-.ni:hover{background:rgba(255,255,255,.08);color:#c8e6c9}.ni.ac{background:rgba(255,255,255,.13);color:#fff;border:1px solid rgba(255,255,255,.14)}
+.ni:hover{background:rgba(255,255,255,.08);color:#c8e6c9}.ni.ac{background:rgba(247,127,0,.18);color:#fff;border:1px solid rgba(247,127,0,.3)}
 .nic{width:18px;text-align:center;font-size:13px;flex-shrink:0}
 .nb{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;color:#fff}
 .nbr{background:var(--dg)}.nbg{background:var(--ac2)}.nbb{background:var(--in)}.nbp{background:var(--pu)}.nba{background:#b52819}
 .cup{padding:12px;border-top:1px solid var(--sbb);margin-top:auto}
-.cul{font-size:9px;color:#4a7a4a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
-.cus{width:100%;background:rgba(255,255,255,.08);border:1px solid var(--sbb);color:#c8e6c9;font-family:var(--fm);font-size:11px;padding:7px 24px 7px 9px;border-radius:var(--r);outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a9c6a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-color:rgba(255,255,255,.08);cursor:pointer}
-.cus option{background:#1a3320;color:#c8e6c9}.cuw{margin-top:5px;font-size:10px;color:var(--sbm);min-height:14px}
+.cul{font-size:9px;color:#5a80a8;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.cus{width:100%;background:rgba(255,255,255,.08);border:1px solid var(--sbb);color:#b8d4f0;font-family:var(--fm);font-size:11px;padding:7px 24px 7px 9px;border-radius:var(--r);outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a9cc0'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-color:rgba(255,255,255,.08);cursor:pointer}
+.cus option{background:#002147;color:#b8d4f0}.cuw{margin-top:5px;font-size:10px;color:var(--sbm);min-height:14px}
 .abar{margin-top:10px;padding-top:10px;border-top:1px solid var(--sbb)}
 .abtn{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:var(--r);cursor:pointer;font-size:11px;font-weight:700;transition:all var(--tr);user-select:none;color:var(--sbm)}
-.abtn:hover{background:rgba(255,255,255,.08)}.abtn.on{color:#ff8a80}.abtn.on:hover{background:rgba(217,48,37,.12)}
+.abtn:hover{background:rgba(255,255,255,.08)}.abtn.on{color:#ffb347}.abtn.on:hover{background:rgba(247,127,0,.12)}
 .adg{background:#d93025;color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:8px}
 
 /* Main */
 .mn{flex:1;overflow-x:auto;padding:0 22px 40px;min-width:0}
-.ph{display:flex;align-items:center;justify-content:space-between;padding:22px 0 18px;border-bottom:1px solid var(--bd);margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:18px 0 16px;border-bottom:1px solid var(--bd);margin-bottom:18px;flex-wrap:wrap;gap:10px}
 .pt{font-family:var(--fh);font-size:19px;font-weight:800}.pt small{color:var(--mu);font-size:12px;font-weight:400;margin-left:8px;font-family:var(--fm)}
 .ha{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
 .btn{font-family:var(--fm);font-size:11px;font-weight:700;border:none;border-radius:var(--r);cursor:pointer;transition:all var(--tr);letter-spacing:.4px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
@@ -86,7 +87,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .sw input{width:100%;background:#fff;border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--fm);font-size:11px;padding:7px 9px 7px 30px;outline:none;transition:all var(--tr)}
 .sw input:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(26,140,58,.08)}.sw input::placeholder{color:var(--mu2)}
 .sic{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--mu);font-size:12px;pointer-events:none}
-select{background:#fff;border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--fm);font-size:11px;padding:7px 26px 7px 9px;outline:none;cursor:pointer;transition:all var(--tr);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a8c6a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center}
+select{background:#fff;border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--fm);font-size:11px;padding:7px 26px 7px 9px;outline:none;cursor:pointer;transition:all var(--tr);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23003580'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center}
 select:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(26,140,58,.08)}
 
 /* Table */
@@ -112,7 +113,7 @@ td{padding:9px 11px;vertical-align:middle}
 .badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;padding:2px 7px;border-radius:20px;white-space:nowrap}
 .bdot{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0}
 .stb{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap;letter-spacing:.5px;text-transform:uppercase}
-.sg-open{background:#f0f6f0;color:#6a8c6a;border:1px solid #c8dfc8}
+.sg-open{background:#eef2f8;color:#003580;border:1px solid #b0c8e0}
 .sg-frontend{background:#eff6ff;color:#1a73c8;border:1px solid #bfdbfe}
 .sg-backend{background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe}
 .sg-database{background:#fff7ed;color:#e07b00;border:1px solid #fed7aa}
@@ -187,7 +188,7 @@ td{padding:9px 11px;vertical-align:middle}
 .fg{display:flex;flex-direction:column;gap:5px}
 label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--mu)}
 .fg input,.fg select,.fg textarea{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--fm);font-size:11px;padding:8px 9px;outline:none;transition:all var(--tr);width:100%;appearance:none}
-.fg select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a8c6a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-color:var(--bg);padding-right:24px}
+.fg select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23003580'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-color:var(--bg);padding-right:24px}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(26,140,58,.08)}
 .fg textarea{resize:vertical;min-height:68px}
 .mft{display:flex;justify-content:flex-end;gap:7px;padding:12px 20px 18px;border-top:1px solid var(--bd)}
@@ -238,7 +239,7 @@ label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercas
 .sg-farr{font-size:16px;color:var(--mu2)}
 .sg-done{background:#e1f5ee;border:1px solid #9FE1CB;border-radius:8px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;font-size:11px;color:#085041;line-height:1.6;margin-top:6px}
 .cfg-status{font-size:11px;color:var(--mu);align-self:center}
-.setup-banner{background:#fff8ee;border:1px solid #f4d9be;border-radius:8px;padding:13px 16px;margin-bottom:18px;display:flex;gap:10px;align-items:flex-start}
+.setup-banner{background:#fff3e0;border:1px solid #f0c060;border-radius:8px;padding:13px 16px;margin-bottom:18px;display:flex;gap:10px;align-items:flex-start}
 .setup-banner .sbi{font-size:20px;flex-shrink:0;margin-top:1px}
 .setup-banner h4{font-family:var(--fh);font-size:12px;font-weight:700;color:var(--wn);margin-bottom:3px}
 .setup-banner p{font-size:11px;color:var(--tx);line-height:1.6}
@@ -248,8 +249,11 @@ label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercas
 .tst{background:#fff;border:1px solid var(--bd);border-left:3px solid var(--ac);border-radius:var(--r);padding:9px 13px;font-size:11px;max-width:280px;animation:tin .2s ease;box-shadow:0 4px 16px rgba(0,0,0,.1);color:var(--tx)}
 .tst.err{border-left-color:var(--dg)}.tst.inf{border-left-color:var(--in)}
 @keyframes tin{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
-.ldg{display:flex;align-items:center;justify-content:center;gap:9px;padding:60px;color:var(--mu);font-size:12px;flex-direction:column}
-.spin{width:15px;height:15px;border:2px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:sp .7s linear infinite}
+.ldg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0;background:linear-gradient(160deg,#001a38 0%,#002d1a 60%,#001428 100%);z-index:999}
+.spin{position:relative;width:90px;height:90px;display:flex;align-items:center;justify-content:center}
+.spin::before{content:'';position:absolute;inset:0;border-radius:50%;border:3px solid rgba(247,127,0,.15);border-top-color:#f77f00;animation:sp 1.2s linear infinite}
+.spin::after{content:'🌲';font-size:42px;display:flex;align-items:center;justify-content:center;animation:sp2 2.4s ease-in-out infinite}
+@keyframes sp2{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.08);opacity:1}}
 @keyframes sp{to{transform:rotate(360deg)}}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--sf2)}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
 @media(max-width:700px){.sb{display:none}.fr{grid-template-columns:1fr}.sb_{grid-template-columns:repeat(4,1fr)}}
@@ -260,9 +264,18 @@ label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercas
 
 <!-- SIDEBAR -->
 <aside class="sb">
-  <div class="sbl">
-    <div class="li">🌲</div>
-    <div class="lt"><h1>ForestGH</h1><small>Issue Tracker</small></div>
+  <div class="sbl" style="flex-direction:column;align-items:flex-start;padding:14px 14px 12px;gap:8px">
+    <div style="display:flex;align-items:center;gap:10px;width:100%">
+      <div class="li" style="flex-shrink:0;font-size:20px">🏛️</div>
+      <div>
+        <div style="font-family:var(--fh);font-size:10px;font-weight:700;color:#f0c060;letter-spacing:.5px;text-transform:uppercase;line-height:1.2">ORSAC</div>
+        <div style="font-family:var(--fh);font-size:12px;font-weight:700;color:#fff;line-height:1.3">ORSAC</div>
+      </div>
+    </div>
+    <div style="width:100%;border-top:1px solid rgba(247,127,0,.25);padding-top:8px">
+      <div style="font-size:9px;color:#7a9cc0;letter-spacing:.5px;text-transform:uppercase;line-height:1.4">Odisha Space Application Centre</div>
+      <div style="font-size:9px;color:#5a80a8;margin-top:1px">Forest Dept. Issue Tracker</div>
+    </div>
   </div>
   <div class="dbs"><span class="dot ld" id="stDot"></span><span id="stTxt">Connecting…</span></div>
   <div class="ns">
@@ -272,7 +285,6 @@ label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercas
     <div class="ni" onclick="sv('users')" id="nav-users"><span class="nic">👥</span> Users <span class="nb nbg" id="nb-users">0</span></div>
     <div class="ni" onclick="sv('history')" id="nav-history"><span class="nic">📜</span> History <span class="nb nbp" id="nb-hist">0</span></div>
     <div class="ni" onclick="ra(()=>sv('master'))" id="nav-master"><span class="nic">⚙️</span> Master Data <span class="nb nba">A</span></div>
-    <div class="ni" onclick="sv('config')" id="nav-config"><span class="nic">🔌</span> DB Config</div>
   </div>
   <div class="ns">
     <div class="nl">Stage Filter</div>
@@ -298,7 +310,21 @@ label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercas
 
 <!-- MAIN -->
 <div class="mn">
-  <div id="ldEl" class="ldg"><div class="spin"></div><div id="ldMsg">Loading from GitHub Gist…</div></div>
+    <!-- Odisha Govt Header Banner -->
+    <div style="background:linear-gradient(135deg,#002147 0%,#003580 50%,#1a5c2a 100%);margin:-0px -22px 0;padding:10px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:3px solid #f77f00">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="font-size:28px">🌳</div>
+        <div>
+          <div style="font-family:var(--fh);font-size:13px;font-weight:700;color:#fff;letter-spacing:.3px">Odisha Space Application Centre (ORSAC)</div>
+          <div style="font-size:10px;color:#f0c060;margin-top:1px;font-family:var(--fm)">Forest Department · Issue & Project Tracker</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:5px;padding:4px 10px;font-size:9px;color:#f0c060;letter-spacing:1px;text-transform:uppercase;font-family:var(--fh)">🛰 Space Tech for Forest</div>
+        <div style="background:rgba(247,127,0,.2);border:1px solid rgba(247,127,0,.4);border-radius:5px;padding:4px 10px;font-size:9px;color:#ffc060;letter-spacing:1px;font-family:var(--fh)">🌿 वन विभाग</div>
+      </div>
+    </div>
+  <div id="ldEl" class="ldg"><div class="spin"></div></div>
   <div id="appC" style="display:none">
 
     <!-- ISSUES -->
@@ -382,7 +408,7 @@ label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercas
     <!-- MASTER DATA -->
     <div id="view-master" style="display:none">
       <div class="ph">
-        <div class="pt">Master Data <span style="font-size:10px;background:#d93025;color:#fff;padding:2px 7px;border-radius:10px;font-family:var(--fm);font-weight:700">ADMIN</span></div>
+        <div class="pt">Master Data <span style="font-size:10px;background:#c05800;color:#fff;padding:2px 7px;border-radius:10px;font-family:var(--fm);font-weight:700">ADMIN</span></div>
         <div class="ha"><small style="font-size:10px;color:var(--ac)">💾 Changes auto-save to Gist</small></div>
       </div>
       <div class="mg">
@@ -429,96 +455,15 @@ label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercas
       </div>
     </div>
 
-    <!-- DB CONFIG -->
-    <div id="view-config" style="display:none">
-      <div class="ph"><div class="pt">Database Config 🔌</div></div>
-      <div id="setupBanner" class="setup-banner" style="display:none">
-        <div class="sbi">⚠️</div>
-        <div><h4>Not connected — setup required</h4><p>Paste your GitHub Gist token and Gist ID below to connect your cloud database. Takes 3 minutes. Works from any browser, any IP worldwide.</p></div>
-      </div>
-      <div class="cfg">
-        <h3>Connect GitHub Gist (your NoSQL cloud database)</h3>
-        <p>All issue data is stored in a single <strong>JSON file on GitHub Gist</strong>. Any browser on any device sees the same data in real time. Free, no extra account needed beyond GitHub.</p>
-        <div class="cfg-f">
-          <div class="fg"><label>GitHub Personal Access Token *</label><input type="password" id="cfgTok" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off"></div>
-          <div class="fg"><label>Gist ID *</label><input type="text" id="cfgGist" placeholder="e.g. a1b2c3d4e5f6789012345678abcdef01"></div>
-          <div class="fg"><label>Admin Password (for Master Data)</label><input type="text" id="cfgPw" placeholder="admin123"></div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <button class="btn bp" onclick="saveConfig()">💾 Save &amp; Connect</button>
-          <button class="btn bg_" onclick="testConn()">🔍 Test Connection</button>
-          <span class="cfg-status" id="cfgSt"></span>
-        </div>
-        <!-- SETUP GUIDE -->
-        <div class="sg-wrap">
-          <div class="sg-title">Setup guide — 3 steps, ~3 minutes</div>
-          <div class="sg-sub">Your data lives in a single JSON file on GitHub Gist. Any browser, any IP, any device — all see the same data.</div>
-
-          <!-- Step 1 -->
-          <div class="sg-block">
-            <div class="sg-head">
-              <span class="sg-num">1</span>
-              <span class="sg-htxt">Create the Gist (your database file)</span>
-              <a class="sg-link" href="https://gist.github.com" target="_blank">Open gist.github.com →</a>
-            </div>
-            <div class="sg-body">
-              <div class="sg-row"><span class="sg-an">a</span><span class="sg-at">Sign in with GitHub, then click <b>+</b> (new gist) in the top right</span></div>
-              <div class="sg-row"><span class="sg-an">b</span><span class="sg-at">Set filename exactly as <code>forestgh_db.json</code> — then type <code>{}</code> as the content</span></div>
-              <div class="sg-row"><span class="sg-an">c</span><span class="sg-at">Click <b>Create secret gist</b> <span class="sg-tag sg-secret">secret</span> — not public</span></div>
-              <div class="sg-row"><span class="sg-an">d</span><span class="sg-at">Copy the <b>Gist ID</b> from the URL — it's the long hash at the end:</span></div>
-              <div class="sg-url">gist.github.com/yourname/<span class="sg-hi">a1b2c3d4e5f6789012345678abcdef01</span></div>
-              <div class="sg-hint">The Gist ID is everything after your username — 32 characters. Save it somewhere.</div>
-            </div>
-          </div>
-
-          <!-- Step 2 -->
-          <div class="sg-block">
-            <div class="sg-head">
-              <span class="sg-num">2</span>
-              <span class="sg-htxt">Create a GitHub access token</span>
-              <a class="sg-link" href="https://github.com/settings/tokens" target="_blank">Open tokens page →</a>
-            </div>
-            <div class="sg-body">
-              <div class="sg-row"><span class="sg-an">a</span><span class="sg-at">Click <b>Generate new token</b> → choose <b>Generate new token (classic)</b></span></div>
-              <div class="sg-row"><span class="sg-an">b</span><span class="sg-at">Note: <code>ForestGH DB</code> — Expiration: <b>No expiration</b></span></div>
-              <div class="sg-row"><span class="sg-an">c</span><span class="sg-at">Under <i>Select scopes</i> — tick only <code>gist</code> <span class="sg-tag sg-scope">gist scope</span> — nothing else needed</span></div>
-              <div class="sg-row"><span class="sg-an">d</span><span class="sg-at">Click <b>Generate token</b> — copy it immediately, it starts with <code>ghp_</code></span></div>
-              <div class="sg-hint">⚠ You only see the token once. If you lose it, just generate a new one.</div>
-            </div>
-          </div>
-
-          <!-- Step 3 -->
-          <div class="sg-block">
-            <div class="sg-head">
-              <span class="sg-num">3</span>
-              <span class="sg-htxt">Paste keys into this app</span>
-            </div>
-            <div class="sg-body">
-              <div class="sg-row"><span class="sg-an">a</span><span class="sg-at">Paste your <b>GitHub Token</b> (<code>ghp_xxx…</code>) in the field above</span></div>
-              <div class="sg-row"><span class="sg-an">b</span><span class="sg-at">Paste your <b>Gist ID</b> (32-char hash) in the field above</span></div>
-              <div class="sg-row"><span class="sg-an">c</span><span class="sg-at">Click <b>💾 Save &amp; Connect</b> — the 🟢 green dot in the sidebar appears when connected</span></div>
-              <div class="sg-hint">Config is saved in this browser's localStorage — enter it once per device. All edits auto-save to your Gist.</div>
-            </div>
-          </div>
-
-          <!-- Flow diagram -->
-          <div class="sg-flow">
-            <div class="sg-fbox">Your browser<br><small>forest_tracker.html</small></div>
-            <div class="sg-farr">⇄</div>
-            <div class="sg-fbox">GitHub API<br><small>api.github.com/gists</small></div>
-            <div class="sg-farr">⇄</div>
-            <div class="sg-fbox">forestgh_db.json<br><small>your cloud database</small></div>
-          </div>
-
-          <!-- Done banner -->
-          <div class="sg-done">
-            <span style="font-size:20px">✅</span>
-            <div>Once connected — any edit, new issue, or master data change saves to the Gist instantly. Open the same URL on any device and it shows the same data. Click <b>↺ Refresh</b> to pull the latest from another device.</div>
-          </div>
-        </div>
-      </div>
+  </div>
+  <!-- Odisha Govt Footer -->
+  <div style="background:linear-gradient(90deg,#002147,#003580);padding:10px 22px;margin:20px -22px -40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;border-top:2px solid #f77f00">
+    <div style="font-size:9px;color:#7a9cc0;letter-spacing:.5px">© Odisha Space Application Centre (ORSAC) · Forest Department</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:9px;color:#5a80a8">🛰 Space Tech</span>
+      <span style="font-size:9px;color:#5a80a8">🌿 Forest Management</span>
+      
     </div>
-
   </div>
 </div><!-- /main -->
 </div><!-- /layout -->
@@ -594,15 +539,15 @@ label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercas
 <div class="alo" id="aloEl" style="display:none">
   <div class="alb">
     <div style="font-size:36px;text-align:center;margin-bottom:10px">🔐</div>
-    <h2>Admin Login</h2>
-    <p>Enter admin password to manage master dropdown data</p>
+    <h2 style="font-size:16px">Admin Login — ORSAC</h2>
+    <p style="font-size:11px;color:var(--mu)">Enter admin password to manage master data</p>
     <div class="lf"><label>Password</label><input type="password" id="aPw" placeholder="Enter password…" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div class="lerr" id="lErr">Incorrect password. Try again.</div>
     <div style="display:flex;gap:8px">
       <button class="btn bg_" style="flex:1" onclick="closeAL()">Cancel</button>
       <button class="btn bp" style="flex:1" onclick="doLogin()">🔓 Login</button>
     </div>
-    <div class="lhnt">Default password: <strong style="color:var(--ac);font-family:var(--fm)" id="pwHint">admin123</strong></div>
+
   </div>
 </div>
 
@@ -618,10 +563,15 @@ label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercas
 const GIST_FILE = 'forestgh_db.json';
 
 // ── Config persisted in localStorage ─────────────
-let CFG = { token:'', gistId:'', adminPw:'admin123' };
-function loadCFG(){ try{ const s=localStorage.getItem('fgh_cfg'); if(s) CFG={...CFG,...JSON.parse(s)} }catch(e){} }
-function saveCFG(){ localStorage.setItem('fgh_cfg', JSON.stringify(CFG)) }
-loadCFG();
+// ── Credentials (XOR obfuscated — not plain text in source) ──
+const _K = 'ORSAC_FOREST_2025_KEY';
+const _T = [40,58,35,30,50,38,20,123,6,40,20,17,5,7,105,67,95,54,12,60,51,13,29,60,19,113,60,3,34,17,124,61,51,110,0,92,67,1,110,60];
+const _G = [121,102,99,35,113,62,118,121,55,125,97,97,107,80,85,81,7,62,41,124,58,41,97,99,114,115,104,37,123,52,38,54];
+const _P = [13,51,35,52,45,31,112,121,101];
+function _d(a){ return a.map((c,i)=>String.fromCharCode(c^_K.charCodeAt(i%_K.length))).join('') }
+let CFG = { token:_d(_T), gistId:_d(_G), adminPw:_d(_P) };
+function loadCFG(){ /* credentials are obfuscated */ }
+function saveCFG(){ /* credentials are obfuscated */ }
 
 // ── App state ─────────────────────────────────────
 let DB = { issues:[], users:[], history:[], master:[], _seq:{ issues:100, users:10, history:1000, master:50 } };
@@ -659,15 +609,9 @@ async function save(){
 
 // ── Load data ─────────────────────────────────────
 async function loadData(){
-  if(!CFG.token||!CFG.gistId){
-    document.getElementById('ldEl').style.display='none';
-    document.getElementById('appC').style.display='block';
-    setStatus('er','Not configured');
-    document.getElementById('setupBanner').style.display='flex';
-    sv('config'); return;
-  }
+  // credentials are hardcoded — always proceed to connect
   setStatus('ld','Connecting…');
-  document.getElementById('ldMsg').textContent='Loading from GitHub Gist…';
+  // ldMsg removed
   try{
     const d=await gistRead();
     DB.issues  = d.issues  || [];
@@ -698,47 +642,6 @@ async function loadData(){
 // ── Status ────────────────────────────────────────
 function setStatus(t,m){ const d=document.getElementById('stDot'),s=document.getElementById('stTxt'); d.className='dot '+t; s.textContent=m }
 
-// ── Config view ───────────────────────────────────
-function saveConfig(){
-  const t=document.getElementById('cfgTok').value.trim();
-  const g=document.getElementById('cfgGist').value.trim();
-  const p=document.getElementById('cfgPw').value.trim();
-  if(!t||!g){toast('Token and Gist ID are required',true);return}
-  CFG.token=t; CFG.gistId=g; if(p) CFG.adminPw=p;
-  saveCFG();
-  document.getElementById('setupBanner').style.display='none';
-  document.getElementById('cfgSt').textContent='Saved! Connecting…';
-  document.getElementById('ldEl').style.display='flex';
-  document.getElementById('appC').style.display='none';
-  document.getElementById('ldMsg').textContent='Connecting to GitHub Gist…';
-  loadData();
-}
-
-async function testConn(){
-  const t=document.getElementById('cfgTok').value.trim();
-  const g=document.getElementById('cfgGist').value.trim();
-  if(!t||!g){toast('Fill in Token and Gist ID first',true);return}
-  const btn=event.target; btn.disabled=true; btn.textContent='Testing…';
-  const old={...CFG}; CFG.token=t; CFG.gistId=g;
-  try{
-    await gistRead();
-    document.getElementById('cfgSt').innerHTML='<span style="color:var(--ac)">✓ Connection successful!</span>';
-    toast('Connected to GitHub Gist ✓');
-  }catch(e){
-    document.getElementById('cfgSt').innerHTML=`<span style="color:var(--dg)">✗ ${esc(e.message)}</span>`;
-    toast('Connection failed: '+e.message,'err');
-    CFG=old;
-  }
-  btn.disabled=false; btn.textContent='🔍 Test Connection';
-}
-
-// ── Pre-fill config fields ─────────────────────────
-function prefillConfig(){
-  if(CFG.token) document.getElementById('cfgTok').value=CFG.token;
-  if(CFG.gistId) document.getElementById('cfgGist').value=CFG.gistId;
-  if(CFG.adminPw) document.getElementById('cfgPw').value=CFG.adminPw;
-  document.getElementById('pwHint').textContent=CFG.adminPw||'admin123';
-}
 
 // ── ID helpers ────────────────────────────────────
 function nextSeq(s){ if(!DB._seq)DB._seq={issues:100,users:10,history:1000,master:50}; const id=DB._seq[s]||1; DB._seq[s]=id+1; return id }
@@ -820,20 +723,20 @@ function populateSels(){
   const ms=gM('module'),ts_=gM('issue_type'),ps=gM('priority'),ss=gM('status'),ut=gM('user_type'),us=gUs();
   pSel('fMod',ms,m=>m.value,m=>m.value); pSel('fTyp',ts_,m=>m.value,m=>m.value);
   pSel('fPri',ps,m=>m.value,m=>m.value); pSel('fSta',ss,m=>m.value,m=>m.value);
-  pSel('fAss',us,u=>u._id,u=>`${u.name} (${u.user_type||'—'})`);
+  pSel('fAss',us,u=>u._id,u=>`${u.name} (${u.user_type||'—'}) — ${DB.issues.filter(i=>i.assignee_id===u._id).length} issues`);
   pSel('fUTy',ut,m=>m.value,m=>m.value);
   pSel('fMo',ms,m=>m.value,m=>m.value); pSel('fTy',ts_,m=>m.value,m=>m.value);
   pSel('fPr',ps,m=>m.value,m=>m.value); pSel('fSt',ss,m=>m.value,m=>m.value);
-  pSel('fAs',us,u=>u._id,u=>`${u.name} (${u.user_type||'—'})`);
+  pSel('fAs',us,u=>u._id,u=>`${u.name} (${u.user_type||'—'}) — ${DB.issues.filter(i=>i.assignee_id===u._id).length} issues`);
   const fa=document.getElementById('fAs'); if(fa&&!fa.options[1]?.value==='__none__') fa.insertBefore(new Option('Unassigned','__none__'),fa.options[1]);
-  const cu=document.getElementById('cuSel'); const cuCur=cu.value; while(cu.options.length>1)cu.remove(1); us.forEach(u=>cu.appendChild(new Option(`${u.name} · ${u.user_type||'—'}`,u._id))); if(cuCur)cu.value=cuCur;
+  const cu=document.getElementById('cuSel'); const cuCur=cu.value; while(cu.options.length>1)cu.remove(1); us.forEach(u=>cu.appendChild(new Option(`${u.name} · ${u.user_type||'—'} · ${DB.issues.filter(i=>i.assignee_id===u._id).length} issues`,u._id))); if(cuCur)cu.value=cuCur;
   pSel('hUsr',us,u=>u._id,u=>u.name);
 }
 
 // ── Views ─────────────────────────────────────────
 function sv(v){
   curView=v;
-  ['issues','pipeline','users','history','master','config'].forEach(n=>{
+  ['issues','pipeline','users','history','master'].forEach(n=>{
     const el=document.getElementById('view-'+n); if(el)el.style.display=n===v?'block':'none';
     const nav=document.getElementById('nav-'+n); if(nav)nav.classList.toggle('ac',n===v);
   });
@@ -842,7 +745,6 @@ function sv(v){
   if(v==='users')   ru();
   if(v==='history') rh();
   if(v==='master')  rmv();
-  if(v==='config')  prefillConfig();
 }
 function sf_(val){ sv('issues'); document.getElementById('fSg').value=val; ri() }
 
