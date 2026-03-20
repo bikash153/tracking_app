@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ForestGH · Issue Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f9f5;--sf:#fff;--sf2:#f0f6f0;--bd:#d0e4d0;--bd2:#b8d4b8;
+  --ac:#1a8c3a;--ac2:#14702e;--tx:#1a2e1a;--mu:#6a8c6a;--mu2:#9ab89a;
+  --dg:#d93025;--wn:#e07b00;--in:#1a73c8;--pu:#7c3aed;
+  --sb:#1a3320;--sbm:#6a9c6a;--sbb:#2a4a2a;
+  --fh:'Syne',sans-serif;--fm:'Space Mono',monospace;
+  --r:6px;--tr:.18s cubic-bezier(.4,0,.2,1)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:var(--fm);font-size:13px;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='10' cy='50' r='2' fill='%231a8c3a' opacity='.04'/%3E%3Ccircle cx='50' cy='10' r='2' fill='%231a8c3a' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+.ly{display:flex;min-height:100vh;position:relative;z-index:1}
+
+/* Sidebar */
+.sb{width:234px;flex-shrink:0;background:var(--sb);border-right:1px solid var(--sbb);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sbl{padding:18px 14px 14px;border-bottom:1px solid var(--sbb);display:flex;align-items:center;gap:10px}
+.li{width:36px;height:36px;background:linear-gradient(135deg,#2ecc71,#1a8c3a);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.lt h1{font-family:var(--fh);font-size:15px;font-weight:800;color:#fff;line-height:1}
+.lt small{font-size:9px;color:var(--sbm);letter-spacing:1.5px;text-transform:uppercase}
+.dbs{padding:6px 14px 3px;font-size:9px;font-weight:700;display:flex;align-items:center;gap:5px;color:var(--sbm)}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;transition:all .3s}
+.ok{background:#2ecc71;box-shadow:0 0 6px #2ecc71}.er{background:var(--dg);box-shadow:0 0 4px var(--dg)}.ld{background:var(--wn);animation:pu 1s infinite}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}
+.ns{padding:10px 10px 4px}.nl{font-size:9px;color:#4a7a4a;letter-spacing:2px;text-transform:uppercase;padding:0 6px;margin-bottom:5px}
+.ni{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r);cursor:pointer;color:var(--sbm);font-size:11px;font-weight:700;transition:all var(--tr);margin-bottom:2px;user-select:none}
+.ni:hover{background:rgba(255,255,255,.08);color:#c8e6c9}.ni.ac{background:rgba(255,255,255,.13);color:#fff;border:1px solid rgba(255,255,255,.14)}
+.nic{width:18px;text-align:center;font-size:13px;flex-shrink:0}
+.nb{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center;color:#fff}
+.nbr{background:var(--dg)}.nbg{background:var(--ac2)}.nbb{background:var(--in)}.nbp{background:var(--pu)}.nba{background:#b52819}
+.cup{padding:12px;border-top:1px solid var(--sbb);margin-top:auto}
+.cul{font-size:9px;color:#4a7a4a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.cus{width:100%;background:rgba(255,255,255,.08);border:1px solid var(--sbb);color:#c8e6c9;font-family:var(--fm);font-size:11px;padding:7px 24px 7px 9px;border-radius:var(--r);outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a9c6a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-color:rgba(255,255,255,.08);cursor:pointer}
+.cus option{background:#1a3320;color:#c8e6c9}.cuw{margin-top:5px;font-size:10px;color:var(--sbm);min-height:14px}
+.abar{margin-top:10px;padding-top:10px;border-top:1px solid var(--sbb)}
+.abtn{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:var(--r);cursor:pointer;font-size:11px;font-weight:700;transition:all var(--tr);user-select:none;color:var(--sbm)}
+.abtn:hover{background:rgba(255,255,255,.08)}.abtn.on{color:#ff8a80}.abtn.on:hover{background:rgba(217,48,37,.12)}
+.adg{background:#d93025;color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:8px}
+
+/* Main */
+.mn{flex:1;overflow-x:auto;padding:0 22px 40px;min-width:0}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:22px 0 18px;border-bottom:1px solid var(--bd);margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.pt{font-family:var(--fh);font-size:19px;font-weight:800}.pt small{color:var(--mu);font-size:12px;font-weight:400;margin-left:8px;font-family:var(--fm)}
+.ha{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.btn{font-family:var(--fm);font-size:11px;font-weight:700;border:none;border-radius:var(--r);cursor:pointer;transition:all var(--tr);letter-spacing:.4px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+.bp{background:var(--ac);color:#fff;padding:8px 15px;box-shadow:0 2px 8px rgba(26,140,58,.2)}.bp:hover:not(:disabled){background:var(--ac2);transform:translateY(-1px)}
+.bg_{background:#fff;color:var(--mu);border:1px solid var(--bd);padding:7px 13px}.bg_:hover{color:var(--tx);border-color:var(--ac);background:var(--sf2)}
+.bd_{background:var(--dg);color:#fff;padding:5px 10px}.bd_:hover{background:#b52819}
+.bw_{background:#fff8ee;color:var(--wn);border:1px solid #f4d9be;padding:4px 8px}
+.bsm{padding:5px 9px;font-size:10px}.bxs{padding:3px 7px;font-size:10px}
+
+/* Stats */
+.sb_{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:9px;margin-bottom:18px}
+.sc{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:12px;position:relative;overflow:hidden;transition:all var(--tr)}
+.sc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.sct::after{background:var(--ac)}.sco::after{background:var(--in)}.scw::after{background:var(--wn)}.scwb::after{background:#0891b2}.scmb::after{background:#d97706}.scd::after{background:var(--ac)}.sch::after{background:var(--dg)}.scu::after{background:var(--pu)}
+.sc:hover{border-color:var(--ac);box-shadow:0 3px 10px rgba(26,140,58,.1);transform:translateY(-1px)}
+.sn{font-family:var(--fh);font-size:24px;font-weight:800;line-height:1;margin-bottom:2px}
+.sct .sn{color:var(--ac)}.sco .sn{color:var(--in)}.scw .sn{color:var(--wn)}.scwb .sn{color:#0891b2}.scmb .sn{color:#d97706}.scd .sn{color:var(--ac)}.sch .sn{color:var(--dg)}.scu .sn{color:var(--pu)}
+.slb{color:var(--mu);font-size:8px;letter-spacing:1.5px;text-transform:uppercase}
+
+/* Pipeline */
+.pw{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:16px 20px;margin-bottom:18px}
+.ptl{font-family:var(--fh);font-size:11px;font-weight:700;color:var(--mu);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.ps{display:flex;align-items:flex-start;overflow-x:auto;padding-bottom:4px}
+.pst{flex:1;min-width:76px;text-align:center;position:relative}
+.pst:not(:last-child)::after{content:'';position:absolute;top:17px;left:50%;width:100%;height:2px;background:var(--bd);z-index:0}
+.pd{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 5px;position:relative;z-index:1;border:2px solid transparent}
+.pc{font-family:var(--fh);font-size:13px;font-weight:800}.pl{font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mu)}
+.prw{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.prb{flex:1;height:6px;background:var(--sf2);border-radius:3px;overflow:hidden;border:1px solid var(--bd)}
+.prf{height:100%;background:linear-gradient(90deg,var(--ac2),#2ecc71);border-radius:3px;transition:width .6s}
+.prl{font-size:10px;color:var(--mu);white-space:nowrap}
+
+/* Toolbar */
+.tb{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.sw{flex:1;min-width:160px;position:relative}
+.sw input{width:100%;background:#fff;border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--fm);font-size:11px;padding:7px 9px 7px 30px;outline:none;transition:all var(--tr)}
+.sw input:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(26,140,58,.08)}.sw input::placeholder{color:var(--mu2)}
+.sic{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--mu);font-size:12px;pointer-events:none}
+select{background:#fff;border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--fm);font-size:11px;padding:7px 26px 7px 9px;outline:none;cursor:pointer;transition:all var(--tr);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a8c6a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center}
+select:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(26,140,58,.08)}
+
+/* Table */
+.tw{background:#fff;border:1px solid var(--bd);border-radius:8px;overflow:hidden;overflow-x:auto;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+table{width:100%;border-collapse:collapse;min-width:960px}
+thead tr{background:var(--sf2);border-bottom:2px solid var(--bd)}
+th{font-family:var(--fh);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--mu);padding:9px 11px;text-align:left;cursor:pointer;user-select:none;white-space:nowrap;transition:color var(--tr)}
+th:hover{color:var(--ac)}.th-s{color:var(--ac)!important}
+tbody tr{border-bottom:1px solid var(--bd);transition:background var(--tr);animation:ri .2s ease both}
+tbody tr:last-child{border-bottom:none}tbody tr:hover{background:#f5fbf5}
+@keyframes ri{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+td{padding:9px 11px;vertical-align:middle}
+.idc{font-weight:700;color:var(--mu);font-size:10px;width:36px}
+.mdc{font-weight:700;color:var(--ac2);white-space:nowrap;font-size:10px}
+.dsc{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+.ac_{display:flex;gap:4px}
+.fb{display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap;gap:6px}
+.rc{font-size:10px;color:var(--mu)}
+.es{padding:48px 20px;text-align:center;color:var(--mu)}
+.es .ei{font-size:34px;margin-bottom:8px;opacity:.4}.es p{font-family:var(--fh);font-size:13px}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.bdot{width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0}
+.stb{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap;letter-spacing:.5px;text-transform:uppercase}
+.sg-open{background:#f0f6f0;color:#6a8c6a;border:1px solid #c8dfc8}
+.sg-frontend{background:#eff6ff;color:#1a73c8;border:1px solid #bfdbfe}
+.sg-backend{background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe}
+.sg-database{background:#fff7ed;color:#e07b00;border:1px solid #fed7aa}
+.sg-web_test{background:#ecfeff;color:#0891b2;border:1px solid #a5f3fc}
+.sg-mob_test{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
+.sg-complete{background:#ecfdf5;color:#1a8c3a;border:1px solid #6ee7b7}
+.uc_{display:inline-flex;align-items:center;gap:4px;background:#eef6ee;border:1px solid var(--bd);border-radius:20px;padding:2px 7px 2px 3px;font-size:10px;color:var(--tx);white-space:nowrap}
+.avsm{width:17px;height:17px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:#fff;flex-shrink:0;font-family:var(--fh)}
+.una{color:var(--mu2);font-size:10px;font-style:italic}
+
+/* Users */
+.ug{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:13px}
+.ucd{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:16px;transition:all var(--tr);box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.ucd:hover{box-shadow:0 4px 14px rgba(26,140,58,.1);border-color:var(--ac);transform:translateY(-1px)}
+.uch{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.uav{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0;font-family:var(--fh)}
+.uci h3{font-family:var(--fh);font-size:14px;font-weight:700;line-height:1.2}
+.uem{font-size:9px;color:var(--mu2);margin-top:2px}
+.ucs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px}
+.ust{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:7px;text-align:center}
+.un{font-family:var(--fh);font-size:17px;font-weight:700;line-height:1}.ul{font-size:8px;color:var(--mu);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.ps_{border-top:1px solid var(--bd);padding-top:9px}
+.pst_{font-size:9px;color:var(--mu);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.pr_{display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:1px solid var(--bd);font-size:10px}
+.pr_:last-child{border-bottom:none}.pd_{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx)}
+.uca{display:flex;gap:5px;margin-top:9px}
+
+/* Kanban */
+.kw{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.kc{background:#fff;border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.kh{padding:10px 12px;font-family:var(--fh);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--bd)}
+.khc{margin-left:auto;font-size:11px;font-weight:800}
+.kb{padding:8px;display:flex;flex-direction:column;gap:5px;min-height:80px}
+.kk{background:var(--bg);border:1px solid var(--bd);border-radius:4px;padding:7px 9px;font-size:10px;cursor:pointer;transition:all var(--tr)}
+.kk:hover{border-color:var(--ac);background:#f0faf0}
+.kkid{font-size:9px;color:var(--mu);margin-bottom:3px}
+.kkd{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx);margin-bottom:4px}
+.kkm{display:flex;gap:4px;flex-wrap:wrap}
+
+/* History */
+.hl{background:#fff;border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.hr_{display:grid;grid-template-columns:12px 1fr auto;gap:10px;padding:10px 14px;border-bottom:1px solid var(--bd);align-items:start;animation:ri .18s ease both}
+.hr_:last-child{border-bottom:none}.hr_:hover{background:#f5fbf5}
+.hdot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.hc{background:var(--ac)}.he{background:var(--wn)}.hd{background:var(--dg)}.hs{background:var(--in)}
+.ht{font-size:11px;color:var(--tx);line-height:1.4}.hm{font-size:10px;color:var(--mu);margin-top:3px;display:flex;gap:4px;flex-wrap:wrap}
+.htm{font-size:9px;color:var(--mu2);white-space:nowrap}.hem{padding:40px;text-align:center;color:var(--mu);font-size:12px}
+
+/* Master */
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.mc{background:#fff;border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.mch{background:var(--sf2);border-bottom:1px solid var(--bd);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.mch h3{font-family:var(--fh);font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+.mcl{padding:8px;max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.mci{display:flex;align-items:center;gap:8px;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:7px 10px;font-size:11px}
+.mcd{width:10px;height:10px;border-radius:50%;flex-shrink:0}.mcv{flex:1;font-weight:700;color:var(--tx)}
+.mca{padding:10px 12px;border-top:1px solid var(--bd);background:var(--sf2);display:flex;gap:6px}
+.mca input,.mca select{background:#fff;border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--fm);font-size:11px;padding:7px 9px;outline:none;flex:1;transition:all var(--tr)}
+.mca input:focus,.mca select:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(26,140,58,.08)}
+.mce{padding:18px;text-align:center;color:var(--mu);font-size:11px}
+
+/* Modals */
+.modal{display:none;position:fixed;inset:0;background:rgba(10,40,10,.42);z-index:100;backdrop-filter:blur(3px)}
+.modal.op{display:flex;align-items:center;justify-content:center;padding:16px}
+.mbox{background:#fff;border:1px solid var(--bd);border-radius:12px;width:100%;max-width:540px;animation:mIn .2s cubic-bezier(.4,0,.2,1);box-shadow:0 16px 40px rgba(0,0,0,.15)}
+@keyframes mIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+.mhd{display:flex;align-items:center;justify-content:space-between;padding:15px 20px 12px;border-bottom:1px solid var(--bd);background:var(--sf2);border-radius:12px 12px 0 0}
+.mhd h2{font-family:var(--fh);font-size:14px;font-weight:700}
+.xb{background:none;border:none;color:var(--mu);font-size:17px;cursor:pointer;transition:color var(--tr);padding:0 3px}.xb:hover{color:var(--dg)}
+.mbd{padding:18px 20px;display:flex;flex-direction:column;gap:13px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fg{display:flex;flex-direction:column;gap:5px}
+label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--mu)}
+.fg input,.fg select,.fg textarea{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--fm);font-size:11px;padding:8px 9px;outline:none;transition:all var(--tr);width:100%;appearance:none}
+.fg select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a8c6a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;background-color:var(--bg);padding-right:24px}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(26,140,58,.08)}
+.fg textarea{resize:vertical;min-height:68px}
+.mft{display:flex;justify-content:flex-end;gap:7px;padding:12px 20px 18px;border-top:1px solid var(--bd)}
+.cfb{padding:18px 20px;text-align:center}.cfb .wi{font-size:28px;margin-bottom:7px}.cfb p{margin-bottom:16px;color:var(--tx);line-height:1.6;font-size:11px}
+.cfa{display:flex;justify-content:center;gap:7px}
+
+/* Admin Login */
+.alo{position:fixed;inset:0;background:rgba(10,40,10,.8);z-index:500;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.alb{background:#fff;border-radius:14px;padding:36px 32px;width:340px;box-shadow:0 24px 60px rgba(0,0,0,.28);animation:mIn .25s cubic-bezier(.4,0,.2,1)}
+.alb h2{font-family:var(--fh);font-size:20px;font-weight:800;text-align:center;margin-bottom:4px}
+.alb p{font-size:11px;color:var(--mu);text-align:center;margin-bottom:24px}
+.lf{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.lf label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--mu)}
+.lf input{background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx);font-family:var(--fm);font-size:12px;padding:10px 11px;outline:none;width:100%;transition:all var(--tr)}
+.lf input:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(26,140,58,.1)}
+.lerr{color:var(--dg);font-size:11px;margin-bottom:8px;display:none}
+.lhnt{margin-top:14px;padding:10px;background:var(--sf2);border-radius:var(--r);font-size:10px;color:var(--mu);text-align:center}
+
+/* Config / Setup view */
+.cfg{background:#fff;border:1px solid var(--bd);border-radius:8px;padding:24px;max-width:620px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.cfg h3{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:6px}
+.cfg p{font-size:11px;color:var(--mu);margin-bottom:18px;line-height:1.7}
+.cfg-f{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.cfg-f .fg input{font-family:var(--fm);font-size:12px}
+.sg-wrap{margin-top:22px}
+.sg-title{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.sg-sub{font-size:11px;color:var(--mu);margin-bottom:14px;line-height:1.6}
+.sg-block{border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-bottom:10px}
+.sg-head{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--sf2)}
+.sg-num{width:24px;height:24px;border-radius:50%;background:#9FE1CB;color:#085041;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sg-htxt{font-size:12px;font-weight:700;color:var(--tx);flex:1}
+.sg-link{font-size:10px;font-weight:700;color:var(--in);text-decoration:none;border:1px solid var(--bd);border-radius:5px;padding:3px 9px;white-space:nowrap;flex-shrink:0}.sg-link:hover{border-color:var(--in)}
+.sg-body{padding:11px 14px;background:#fff;display:flex;flex-direction:column;gap:7px}
+.sg-row{display:flex;align-items:flex-start;gap:8px}
+.sg-an{width:16px;height:16px;border-radius:50%;background:var(--sf2);border:1px solid var(--bd);font-size:9px;font-weight:700;color:var(--mu);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sg-at{font-size:11px;color:var(--tx);line-height:1.6}
+.sg-at code{background:#f5f9f5;border:1px solid var(--bd);border-radius:3px;padding:1px 5px;font-family:var(--fm);font-size:10px;color:var(--ac2)}
+.sg-at a{color:var(--in);font-weight:700;text-decoration:none}.sg-at a:hover{text-decoration:underline}
+.sg-url{font-family:var(--fm);font-size:10px;background:var(--sf2);border:1px solid var(--bd);border-radius:5px;padding:6px 10px;color:var(--mu)}
+.sg-hi{color:var(--dg);font-weight:700}
+.sg-hint{background:#f0f6f0;border-left:3px solid #1a8c3a;border-radius:0 5px 5px 0;padding:7px 10px;font-size:10px;color:var(--mu);line-height:1.6}
+.sg-tag{display:inline-block;padding:1px 6px;border-radius:10px;font-size:9px;font-weight:700;margin-left:4px}
+.sg-secret{background:#fff3e0;color:#7a4400}
+.sg-scope{background:#e1f5ee;color:#085041}
+.sg-flow{display:flex;align-items:center;gap:8px;padding:12px 0 4px;flex-wrap:wrap}
+.sg-fbox{background:var(--sf2);border:1px solid var(--bd);border-radius:7px;padding:8px 14px;font-size:11px;font-weight:700;color:var(--tx);text-align:center;line-height:1.5}
+.sg-fbox small{display:block;font-size:9px;font-weight:400;color:var(--mu);font-family:var(--fm)}
+.sg-farr{font-size:16px;color:var(--mu2)}
+.sg-done{background:#e1f5ee;border:1px solid #9FE1CB;border-radius:8px;padding:12px 14px;display:flex;align-items:flex-start;gap:10px;font-size:11px;color:#085041;line-height:1.6;margin-top:6px}
+.cfg-status{font-size:11px;color:var(--mu);align-self:center}
+.setup-banner{background:#fff8ee;border:1px solid #f4d9be;border-radius:8px;padding:13px 16px;margin-bottom:18px;display:flex;gap:10px;align-items:flex-start}
+.setup-banner .sbi{font-size:20px;flex-shrink:0;margin-top:1px}
+.setup-banner h4{font-family:var(--fh);font-size:12px;font-weight:700;color:var(--wn);margin-bottom:3px}
+.setup-banner p{font-size:11px;color:var(--tx);line-height:1.6}
+
+/* Toast */
+.tct{position:fixed;bottom:18px;right:18px;z-index:300;display:flex;flex-direction:column;gap:5px}
+.tst{background:#fff;border:1px solid var(--bd);border-left:3px solid var(--ac);border-radius:var(--r);padding:9px 13px;font-size:11px;max-width:280px;animation:tin .2s ease;box-shadow:0 4px 16px rgba(0,0,0,.1);color:var(--tx)}
+.tst.err{border-left-color:var(--dg)}.tst.inf{border-left-color:var(--in)}
+@keyframes tin{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+.ldg{display:flex;align-items:center;justify-content:center;gap:9px;padding:60px;color:var(--mu);font-size:12px;flex-direction:column}
+.spin{width:15px;height:15px;border:2px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--sf2)}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
+@media(max-width:700px){.sb{display:none}.fr{grid-template-columns:1fr}.sb_{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<div class="ly">
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sbl">
+    <div class="li">🌲</div>
+    <div class="lt"><h1>ForestGH</h1><small>Issue Tracker</small></div>
+  </div>
+  <div class="dbs"><span class="dot ld" id="stDot"></span><span id="stTxt">Connecting…</span></div>
+  <div class="ns">
+    <div class="nl">Views</div>
+    <div class="ni ac" onclick="sv('issues')" id="nav-issues"><span class="nic">📋</span> Issues <span class="nb nbr" id="nb-open">0</span></div>
+    <div class="ni" onclick="sv('pipeline')" id="nav-pipeline"><span class="nic">🔄</span> Pipeline <span class="nb nbb" id="nb-pipe">0</span></div>
+    <div class="ni" onclick="sv('users')" id="nav-users"><span class="nic">👥</span> Users <span class="nb nbg" id="nb-users">0</span></div>
+    <div class="ni" onclick="sv('history')" id="nav-history"><span class="nic">📜</span> History <span class="nb nbp" id="nb-hist">0</span></div>
+    <div class="ni" onclick="ra(()=>sv('master'))" id="nav-master"><span class="nic">⚙️</span> Master Data <span class="nb nba">A</span></div>
+    <div class="ni" onclick="sv('config')" id="nav-config"><span class="nic">🔌</span> DB Config</div>
+  </div>
+  <div class="ns">
+    <div class="nl">Stage Filter</div>
+    <div class="ni" onclick="sf_('open')"><span class="nic">📂</span> Open</div>
+    <div class="ni" onclick="sf_('frontend')"><span class="nic">🖥️</span> Frontend</div>
+    <div class="ni" onclick="sf_('backend')"><span class="nic">⚙️</span> Backend</div>
+    <div class="ni" onclick="sf_('database')"><span class="nic">🗄️</span> Database</div>
+    <div class="ni" onclick="sf_('web_test')"><span class="nic">🌐</span> Web Test</div>
+    <div class="ni" onclick="sf_('mob_test')"><span class="nic">📱</span> Mobile Test</div>
+    <div class="ni" onclick="sf_('complete')"><span class="nic">✅</span> Complete</div>
+    <div class="ni" onclick="sf_('')"><span class="nic">✦</span> All Issues</div>
+  </div>
+  <div class="cup">
+    <div class="cul">Active User</div>
+    <select class="cus" id="cuSel" onchange="onUC()"><option value="">— Select User —</option></select>
+    <div class="cuw" id="cuWho"></div>
+    <div class="abar">
+      <div class="abtn" id="alnBtn" onclick="openAL()">🔐 Admin Login</div>
+      <div class="abtn on" id="aoutBtn" style="display:none" onclick="aLogout()">🔓 Admin <span class="adg">ON</span> · Logout</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="mn">
+  <div id="ldEl" class="ldg"><div class="spin"></div><div id="ldMsg">Loading from GitHub Gist…</div></div>
+  <div id="appC" style="display:none">
+
+    <!-- ISSUES -->
+    <div id="view-issues">
+      <div class="ph">
+        <div class="pt">Issues</div>
+        <div class="ha">
+          <button class="btn bg_ bsm" onclick="loadData()">↺ Refresh</button>
+          <button class="btn bg_ bsm" onclick="expCSV()">⬇ CSV</button>
+          <button class="btn bp" onclick="openIM()">＋ New Issue</button>
+        </div>
+      </div>
+      <div class="sb_">
+        <div class="sc sct"><div class="sn" id="s-tot">0</div><div class="slb">Total</div></div>
+        <div class="sc sco"><div class="sn" id="s-opn">0</div><div class="slb">Open</div></div>
+        <div class="sc scw"><div class="sn" id="s-wip">0</div><div class="slb">WIP</div></div>
+        <div class="sc scwb"><div class="sn" id="s-web">0</div><div class="slb">Web Test</div></div>
+        <div class="sc scmb"><div class="sn" id="s-mob">0</div><div class="slb">Mob Test</div></div>
+        <div class="sc scd"><div class="sn" id="s-don">0</div><div class="slb">Complete</div></div>
+        <div class="sc sch"><div class="sn" id="s-hig">0</div><div class="slb">High</div></div>
+        <div class="sc scu"><div class="sn" id="s-usr">0</div><div class="slb">Users</div></div>
+      </div>
+      <div class="pw"><div class="ptl">📊 Stage Pipeline</div><div class="ps" id="pBar"></div></div>
+      <div class="prw"><div class="prb"><div class="prf" id="prF" style="width:0%"></div></div><div class="prl" id="prL">0% complete</div></div>
+      <div class="tb">
+        <div class="sw"><span class="sic">⌕</span><input type="text" id="srch" placeholder="Search issues…" oninput="ri()"></div>
+        <select id="fMo" onchange="ri()"><option value="">All Modules</option></select>
+        <select id="fTy" onchange="ri()"><option value="">All Types</option></select>
+        <select id="fPr" onchange="ri()"><option value="">All Priorities</option></select>
+        <select id="fSt" onchange="ri()"><option value="">All Status</option></select>
+        <select id="fSg" onchange="ri()">
+          <option value="">All Stages</option>
+          <option value="open">Open</option><option value="frontend">Frontend</option>
+          <option value="backend">Backend</option><option value="database">Database</option>
+          <option value="web_test">Web App Test</option><option value="mob_test">Mobile App Test</option>
+          <option value="complete">Complete</option>
+        </select>
+        <select id="fAs" onchange="ri()"><option value="">All Assignees</option></select>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr>
+            <th onclick="sBy('_seq')"># <span id="sa-seq">↕</span></th>
+            <th onclick="sBy('module')">Module <span id="sa-module">↕</span></th>
+            <th>Description</th><th>Type</th>
+            <th onclick="sBy('priority')">Priority <span id="sa-priority">↕</span></th>
+            <th onclick="sBy('status')">Status <span id="sa-status">↕</span></th>
+            <th onclick="sBy('stage')">Stage <span id="sa-stage">↕</span></th>
+            <th>Assigned To</th><th>Modified By</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="issTbl"></tbody>
+        </table>
+        <div id="emptyI" class="es" style="display:none"><div class="ei">🌿</div><p>No issues match filters</p></div>
+      </div>
+      <div class="fb"><div class="rc" id="recC"></div><button class="btn bg_ bsm" onclick="expCSV()">⬇ Export CSV</button></div>
+    </div>
+
+    <!-- PIPELINE -->
+    <div id="view-pipeline" style="display:none">
+      <div class="ph"><div class="pt">Pipeline Board</div><div class="ha"><button class="btn bp" onclick="openIM()">＋ New Issue</button></div></div>
+      <div class="kw" id="kanban"></div>
+    </div>
+
+    <!-- USERS -->
+    <div id="view-users" style="display:none">
+      <div class="ph"><div class="pt">Users</div><div class="ha"><button class="btn bp" onclick="openUM()">＋ Add User</button></div></div>
+      <div class="ug" id="usersG"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div id="view-history" style="display:none">
+      <div class="ph"><div class="pt">Activity History</div></div>
+      <div class="tb">
+        <div class="sw"><span class="sic">⌕</span><input type="text" id="hSrch" placeholder="Search history…" oninput="rh()"></div>
+        <select id="hUsr" onchange="rh()"><option value="">All Users</option></select>
+        <select id="hTyp" onchange="rh()"><option value="">All Actions</option><option value="create">Created</option><option value="edit">Edited</option><option value="stage">Stage</option><option value="delete">Deleted</option></select>
+      </div>
+      <div class="hl" id="histL"></div>
+    </div>
+
+    <!-- MASTER DATA -->
+    <div id="view-master" style="display:none">
+      <div class="ph">
+        <div class="pt">Master Data <span style="font-size:10px;background:#d93025;color:#fff;padding:2px 7px;border-radius:10px;font-family:var(--fm);font-weight:700">ADMIN</span></div>
+        <div class="ha"><small style="font-size:10px;color:var(--ac)">💾 Changes auto-save to Gist</small></div>
+      </div>
+      <div class="mg">
+        <div class="mc">
+          <div class="mch"><h3>📦 Modules</h3><small id="mc-mod-cnt" style="font-size:10px;color:var(--mu)"></small></div>
+          <div class="mcl" id="mc-module"></div>
+          <div class="mca"><input type="text" id="mi-module" placeholder="New module…" onkeydown="if(event.key==='Enter')addM('module')"><button class="btn bp bsm" onclick="addM('module')">＋</button></div>
+        </div>
+        <div class="mc">
+          <div class="mch"><h3>🏷️ Issue Types</h3><small id="mc-type-cnt" style="font-size:10px;color:var(--mu)"></small></div>
+          <div class="mcl" id="mc-issue_type"></div>
+          <div class="mca">
+            <input type="text" id="mi-issue_type" placeholder="New type…" onkeydown="if(event.key==='Enter')addM('issue_type')">
+            <select id="mc-issue_type-col"><option value="#1a73c8">🔵 Blue</option><option value="#7c3aed">🟣 Purple</option><option value="#e07b00">🟠 Orange</option><option value="#d93025">🔴 Red</option><option value="#1a8c3a">🟢 Green</option></select>
+            <button class="btn bp bsm" onclick="addM('issue_type')">＋</button>
+          </div>
+        </div>
+        <div class="mc">
+          <div class="mch"><h3>🔺 Priorities</h3><small id="mc-pri-cnt" style="font-size:10px;color:var(--mu)"></small></div>
+          <div class="mcl" id="mc-priority"></div>
+          <div class="mca">
+            <input type="text" id="mi-priority" placeholder="New priority…" onkeydown="if(event.key==='Enter')addM('priority')">
+            <select id="mc-priority-col"><option value="#d93025">🔴 Red</option><option value="#e07b00">🟠 Orange</option><option value="#1a8c3a">🟢 Green</option><option value="#1a73c8">🔵 Blue</option></select>
+            <button class="btn bp bsm" onclick="addM('priority')">＋</button>
+          </div>
+        </div>
+        <div class="mc">
+          <div class="mch"><h3>🔘 Statuses</h3><small id="mc-sta-cnt" style="font-size:10px;color:var(--mu)"></small></div>
+          <div class="mcl" id="mc-status"></div>
+          <div class="mca">
+            <input type="text" id="mi-status" placeholder="New status…" onkeydown="if(event.key==='Enter')addM('status')">
+            <select id="mc-status-col"><option value="#1a73c8">🔵 Blue</option><option value="#e07b00">🟡 Amber</option><option value="#1a8c3a">🟢 Green</option><option value="#d93025">🔴 Red</option></select>
+            <button class="btn bp bsm" onclick="addM('status')">＋</button>
+          </div>
+        </div>
+        <div class="mc">
+          <div class="mch"><h3>👤 User Types</h3><small id="mc-uty-cnt" style="font-size:10px;color:var(--mu)"></small></div>
+          <div class="mcl" id="mc-user_type"></div>
+          <div class="mca">
+            <input type="text" id="mi-user_type" placeholder="New user type…" onkeydown="if(event.key==='Enter')addM('user_type')">
+            <button class="btn bp bsm" onclick="addM('user_type')">＋</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DB CONFIG -->
+    <div id="view-config" style="display:none">
+      <div class="ph"><div class="pt">Database Config 🔌</div></div>
+      <div id="setupBanner" class="setup-banner" style="display:none">
+        <div class="sbi">⚠️</div>
+        <div><h4>Not connected — setup required</h4><p>Paste your GitHub Gist token and Gist ID below to connect your cloud database. Takes 3 minutes. Works from any browser, any IP worldwide.</p></div>
+      </div>
+      <div class="cfg">
+        <h3>Connect GitHub Gist (your NoSQL cloud database)</h3>
+        <p>All issue data is stored in a single <strong>JSON file on GitHub Gist</strong>. Any browser on any device sees the same data in real time. Free, no extra account needed beyond GitHub.</p>
+        <div class="cfg-f">
+          <div class="fg"><label>GitHub Personal Access Token *</label><input type="password" id="cfgTok" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off"></div>
+          <div class="fg"><label>Gist ID *</label><input type="text" id="cfgGist" placeholder="e.g. a1b2c3d4e5f6789012345678abcdef01"></div>
+          <div class="fg"><label>Admin Password (for Master Data)</label><input type="text" id="cfgPw" placeholder="admin123"></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn bp" onclick="saveConfig()">💾 Save &amp; Connect</button>
+          <button class="btn bg_" onclick="testConn()">🔍 Test Connection</button>
+          <span class="cfg-status" id="cfgSt"></span>
+        </div>
+        <!-- SETUP GUIDE -->
+        <div class="sg-wrap">
+          <div class="sg-title">Setup guide — 3 steps, ~3 minutes</div>
+          <div class="sg-sub">Your data lives in a single JSON file on GitHub Gist. Any browser, any IP, any device — all see the same data.</div>
+
+          <!-- Step 1 -->
+          <div class="sg-block">
+            <div class="sg-head">
+              <span class="sg-num">1</span>
+              <span class="sg-htxt">Create the Gist (your database file)</span>
+              <a class="sg-link" href="https://gist.github.com" target="_blank">Open gist.github.com →</a>
+            </div>
+            <div class="sg-body">
+              <div class="sg-row"><span class="sg-an">a</span><span class="sg-at">Sign in with GitHub, then click <b>+</b> (new gist) in the top right</span></div>
+              <div class="sg-row"><span class="sg-an">b</span><span class="sg-at">Set filename exactly as <code>forestgh_db.json</code> — then type <code>{}</code> as the content</span></div>
+              <div class="sg-row"><span class="sg-an">c</span><span class="sg-at">Click <b>Create secret gist</b> <span class="sg-tag sg-secret">secret</span> — not public</span></div>
+              <div class="sg-row"><span class="sg-an">d</span><span class="sg-at">Copy the <b>Gist ID</b> from the URL — it's the long hash at the end:</span></div>
+              <div class="sg-url">gist.github.com/yourname/<span class="sg-hi">a1b2c3d4e5f6789012345678abcdef01</span></div>
+              <div class="sg-hint">The Gist ID is everything after your username — 32 characters. Save it somewhere.</div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="sg-block">
+            <div class="sg-head">
+              <span class="sg-num">2</span>
+              <span class="sg-htxt">Create a GitHub access token</span>
+              <a class="sg-link" href="https://github.com/settings/tokens" target="_blank">Open tokens page →</a>
+            </div>
+            <div class="sg-body">
+              <div class="sg-row"><span class="sg-an">a</span><span class="sg-at">Click <b>Generate new token</b> → choose <b>Generate new token (classic)</b></span></div>
+              <div class="sg-row"><span class="sg-an">b</span><span class="sg-at">Note: <code>ForestGH DB</code> — Expiration: <b>No expiration</b></span></div>
+              <div class="sg-row"><span class="sg-an">c</span><span class="sg-at">Under <i>Select scopes</i> — tick only <code>gist</code> <span class="sg-tag sg-scope">gist scope</span> — nothing else needed</span></div>
+              <div class="sg-row"><span class="sg-an">d</span><span class="sg-at">Click <b>Generate token</b> — copy it immediately, it starts with <code>ghp_</code></span></div>
+              <div class="sg-hint">⚠ You only see the token once. If you lose it, just generate a new one.</div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="sg-block">
+            <div class="sg-head">
+              <span class="sg-num">3</span>
+              <span class="sg-htxt">Paste keys into this app</span>
+            </div>
+            <div class="sg-body">
+              <div class="sg-row"><span class="sg-an">a</span><span class="sg-at">Paste your <b>GitHub Token</b> (<code>ghp_xxx…</code>) in the field above</span></div>
+              <div class="sg-row"><span class="sg-an">b</span><span class="sg-at">Paste your <b>Gist ID</b> (32-char hash) in the field above</span></div>
+              <div class="sg-row"><span class="sg-an">c</span><span class="sg-at">Click <b>💾 Save &amp; Connect</b> — the 🟢 green dot in the sidebar appears when connected</span></div>
+              <div class="sg-hint">Config is saved in this browser's localStorage — enter it once per device. All edits auto-save to your Gist.</div>
+            </div>
+          </div>
+
+          <!-- Flow diagram -->
+          <div class="sg-flow">
+            <div class="sg-fbox">Your browser<br><small>forest_tracker.html</small></div>
+            <div class="sg-farr">⇄</div>
+            <div class="sg-fbox">GitHub API<br><small>api.github.com/gists</small></div>
+            <div class="sg-farr">⇄</div>
+            <div class="sg-fbox">forestgh_db.json<br><small>your cloud database</small></div>
+          </div>
+
+          <!-- Done banner -->
+          <div class="sg-done">
+            <span style="font-size:20px">✅</span>
+            <div>Once connected — any edit, new issue, or master data change saves to the Gist instantly. Open the same URL on any device and it shows the same data. Click <b>↺ Refresh</b> to pull the latest from another device.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- Issue Modal -->
+<div class="modal" id="iMod">
+  <div class="mbox">
+    <div class="mhd"><h2 id="iMT">New Issue</h2><button class="xb" onclick="closeIM()">✕</button></div>
+    <div class="mbd">
+      <input type="hidden" id="eId">
+      <div class="fr">
+        <div class="fg"><label>Module *</label><select id="fMod"><option value="">Select…</option></select></div>
+        <div class="fg"><label>Issue Type</label><select id="fTyp"><option value="">Select…</option></select></div>
+      </div>
+      <div class="fg"><label>Description *</label><textarea id="fDes" placeholder="Describe the issue…"></textarea></div>
+      <div class="fr">
+        <div class="fg"><label>Priority *</label><select id="fPri"><option value="">Select…</option></select></div>
+        <div class="fg"><label>Status *</label><select id="fSta"><option value="">Select…</option></select></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Stage</label>
+          <select id="fStg">
+            <option value="open">📂 Open</option><option value="frontend">🖥️ Frontend Dev</option>
+            <option value="backend">⚙️ Backend Dev</option><option value="database">🗄️ Database</option>
+            <option value="web_test">🌐 Web App Test</option><option value="mob_test">📱 Mobile App Test</option>
+            <option value="complete">✅ Complete</option>
+          </select>
+        </div>
+        <div class="fg"><label>Assign To</label><select id="fAss"><option value="">Unassigned</option></select></div>
+      </div>
+      <div class="fg"><label>Remarks</label><input type="text" id="fRem" placeholder="Optional notes…"></div>
+    </div>
+    <div class="mft"><button class="btn bg_" onclick="closeIM()">Cancel</button><button class="btn bp" id="savIBtn" onclick="saveIssue()">💾 Save Issue</button></div>
+  </div>
+</div>
+
+<!-- User Modal -->
+<div class="modal" id="uMod">
+  <div class="mbox">
+    <div class="mhd"><h2 id="uMT">Add User</h2><button class="xb" onclick="closeUM()">✕</button></div>
+    <div class="mbd">
+      <input type="hidden" id="eUId">
+      <div class="fr">
+        <div class="fg"><label>Full Name *</label><input type="text" id="fUNm" placeholder="e.g. Ravi Kumar"></div>
+        <div class="fg"><label>User Type</label>
+          <select id="fUTy"><option value="">Select…</option></select>
+        </div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label>Email</label><input type="email" id="fUEm" placeholder="user@example.com"></div>
+        <div class="fg"><label>Avatar Color</label>
+          <select id="fUCo">
+            <option value="#1a8c3a">🟢 Forest Green</option><option value="#1a73c8">🔵 Blue</option>
+            <option value="#7c3aed">🟣 Purple</option><option value="#e07b00">🟠 Orange</option>
+            <option value="#d93025">🔴 Red</option><option value="#0891b2">🩵 Teal</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="mft"><button class="btn bg_" onclick="closeUM()">Cancel</button><button class="btn bp" id="savUBtn" onclick="saveUser()">💾 Save User</button></div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal" id="cMod">
+  <div class="mbox" style="max-width:360px">
+    <div class="mhd"><h2 id="cT">Confirm</h2><button class="xb" onclick="closeCnf()">✕</button></div>
+    <div class="cfb"><div class="wi">⚠️</div><p id="cMsg">Are you sure?</p><div class="cfa"><button class="btn bg_" onclick="closeCnf()">Cancel</button><button class="btn bd_" onclick="doCnf()">Delete</button></div></div>
+  </div>
+</div>
+
+<!-- Admin Login -->
+<div class="alo" id="aloEl" style="display:none">
+  <div class="alb">
+    <div style="font-size:36px;text-align:center;margin-bottom:10px">🔐</div>
+    <h2>Admin Login</h2>
+    <p>Enter admin password to manage master dropdown data</p>
+    <div class="lf"><label>Password</label><input type="password" id="aPw" placeholder="Enter password…" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="lerr" id="lErr">Incorrect password. Try again.</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn bg_" style="flex:1" onclick="closeAL()">Cancel</button>
+      <button class="btn bp" style="flex:1" onclick="doLogin()">🔓 Login</button>
+    </div>
+    <div class="lhnt">Default password: <strong style="color:var(--ac);font-family:var(--fm)" id="pwHint">admin123</strong></div>
+  </div>
+</div>
+
+<div class="tct" id="tct"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+// GitHub Gist — NoSQL Cloud Database
+// One JSON file on GitHub = your entire database
+// Any browser · Any IP · Any device worldwide
+// ══════════════════════════════════════════════════
+
+const GIST_FILE = 'forestgh_db.json';
+
+// ── Config persisted in localStorage ─────────────
+let CFG = { token:'', gistId:'', adminPw:'admin123' };
+function loadCFG(){ try{ const s=localStorage.getItem('fgh_cfg'); if(s) CFG={...CFG,...JSON.parse(s)} }catch(e){} }
+function saveCFG(){ localStorage.setItem('fgh_cfg', JSON.stringify(CFG)) }
+loadCFG();
+
+// ── App state ─────────────────────────────────────
+let DB = { issues:[], users:[], history:[], master:[], _seq:{ issues:100, users:10, history:1000, master:50 } };
+let isAdmin=false, curUid=null, confCb=null, curView='issues', sCol='_seq', sDir='ASC';
+let isSaving=false, saveQ=false, pendAdmin=null;
+
+// ── GitHub Gist API ───────────────────────────────
+function ghHdr(){ return {'Authorization':`token ${CFG.token}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'} }
+
+async function gistRead(){
+  const r=await fetch(`https://api.github.com/gists/${CFG.gistId}`,{headers:ghHdr()});
+  if(!r.ok) throw new Error(`GitHub ${r.status}: ${r.statusText}`);
+  const g=await r.json();
+  const raw=g.files?.[GIST_FILE]?.content||'{}';
+  return JSON.parse(raw);
+}
+
+async function gistWrite(data){
+  const r=await fetch(`https://api.github.com/gists/${CFG.gistId}`,{
+    method:'PATCH', headers:ghHdr(),
+    body:JSON.stringify({files:{[GIST_FILE]:{content:JSON.stringify(data,null,2)}}})
+  });
+  if(!r.ok) throw new Error(`GitHub ${r.status}: ${r.statusText}`);
+  return r.json();
+}
+
+// ── Save with queue ───────────────────────────────
+async function save(){
+  if(isSaving){saveQ=true;return}
+  isSaving=true; setStatus('ld','Saving…');
+  try{ await gistWrite(DB); setStatus('ok','Saved ✓'); setTimeout(()=>setStatus('ok','Connected'),1800) }
+  catch(e){ setStatus('er','Save failed'); toast('Save failed: '+e.message,'err') }
+  finally{ isSaving=false; if(saveQ){saveQ=false;save()} }
+}
+
+// ── Load data ─────────────────────────────────────
+async function loadData(){
+  if(!CFG.token||!CFG.gistId){
+    document.getElementById('ldEl').style.display='none';
+    document.getElementById('appC').style.display='block';
+    setStatus('er','Not configured');
+    document.getElementById('setupBanner').style.display='flex';
+    sv('config'); return;
+  }
+  setStatus('ld','Connecting…');
+  document.getElementById('ldMsg').textContent='Loading from GitHub Gist…';
+  try{
+    const d=await gistRead();
+    DB.issues  = d.issues  || [];
+    DB.users   = d.users   || [];
+    DB.history = d.history || [];
+    DB.master  = d.master  || [];
+    DB._seq    = d._seq    || {issues:100,users:10,history:1000,master:50};
+    if(!DB.master.length) seedMaster();
+    if(!DB.users.length)  seedUsers();
+    if(!DB.issues.length) seedIssues();
+    setStatus('ok','Connected');
+    document.getElementById('ldEl').style.display='none';
+    document.getElementById('appC').style.display='block';
+    populateSels(); ri(); updateBadges();
+    if(!d.issues?.length||!d.master?.length) await save();
+  }catch(e){
+    setStatus('er','Connection failed');
+    document.getElementById('ldEl').innerHTML=`
+      <div style="text-align:center;padding:20px">
+        <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+        <div style="color:var(--dg);font-size:12px;margin-bottom:8px;max-width:320px">${esc(e.message)}</div>
+        <div style="font-size:11px;color:var(--mu);margin-bottom:16px">Check your Token and Gist ID in DB Config</div>
+        <button class="btn bp" onclick="document.getElementById('ldEl').style.display='none';document.getElementById('appC').style.display='block';sv('config')">🔌 Open DB Config</button>
+      </div>`;
+  }
+}
+
+// ── Status ────────────────────────────────────────
+function setStatus(t,m){ const d=document.getElementById('stDot'),s=document.getElementById('stTxt'); d.className='dot '+t; s.textContent=m }
+
+// ── Config view ───────────────────────────────────
+function saveConfig(){
+  const t=document.getElementById('cfgTok').value.trim();
+  const g=document.getElementById('cfgGist').value.trim();
+  const p=document.getElementById('cfgPw').value.trim();
+  if(!t||!g){toast('Token and Gist ID are required',true);return}
+  CFG.token=t; CFG.gistId=g; if(p) CFG.adminPw=p;
+  saveCFG();
+  document.getElementById('setupBanner').style.display='none';
+  document.getElementById('cfgSt').textContent='Saved! Connecting…';
+  document.getElementById('ldEl').style.display='flex';
+  document.getElementById('appC').style.display='none';
+  document.getElementById('ldMsg').textContent='Connecting to GitHub Gist…';
+  loadData();
+}
+
+async function testConn(){
+  const t=document.getElementById('cfgTok').value.trim();
+  const g=document.getElementById('cfgGist').value.trim();
+  if(!t||!g){toast('Fill in Token and Gist ID first',true);return}
+  const btn=event.target; btn.disabled=true; btn.textContent='Testing…';
+  const old={...CFG}; CFG.token=t; CFG.gistId=g;
+  try{
+    await gistRead();
+    document.getElementById('cfgSt').innerHTML='<span style="color:var(--ac)">✓ Connection successful!</span>';
+    toast('Connected to GitHub Gist ✓');
+  }catch(e){
+    document.getElementById('cfgSt').innerHTML=`<span style="color:var(--dg)">✗ ${esc(e.message)}</span>`;
+    toast('Connection failed: '+e.message,'err');
+    CFG=old;
+  }
+  btn.disabled=false; btn.textContent='🔍 Test Connection';
+}
+
+// ── Pre-fill config fields ─────────────────────────
+function prefillConfig(){
+  if(CFG.token) document.getElementById('cfgTok').value=CFG.token;
+  if(CFG.gistId) document.getElementById('cfgGist').value=CFG.gistId;
+  if(CFG.adminPw) document.getElementById('cfgPw').value=CFG.adminPw;
+  document.getElementById('pwHint').textContent=CFG.adminPw||'admin123';
+}
+
+// ── ID helpers ────────────────────────────────────
+function nextSeq(s){ if(!DB._seq)DB._seq={issues:100,users:10,history:1000,master:50}; const id=DB._seq[s]||1; DB._seq[s]=id+1; return id }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7) }
+
+// ── CRUD helpers ──────────────────────────────────
+function addR(s,obj){ const r={...obj,_id:uid(),_seq:nextSeq(s)}; DB[s].push(r); return r }
+function updR(s,id,patch){ const i=DB[s].findIndex(r=>r._id===id); if(i>-1) DB[s][i]={...DB[s][i],...patch} }
+function delR(s,id){ DB[s]=DB[s].filter(r=>r._id!==id) }
+function addLog(a,id,d){ DB.history.push({_id:uid(),_seq:nextSeq('history'),action:a,issue_id:id||null,user_id:curUid||null,detail:d,ts:ts()}) }
+
+// ── Seed data ─────────────────────────────────────
+function seedMaster(){
+  const a=(c,vs)=>vs.forEach(([v,col])=>DB.master.push({_id:uid(),_seq:nextSeq('master'),category:c,value:v,color:col||'',created_at:ts()}));
+  a('module',[['Asset'],['General'],['Forest Fire'],['App / Navigation'],['Vanamasta'],['FRA'],['Attenadnce'],['General Survey'],['Working Plan']]);
+  a('priority',[['High','#d93025'],['Medium','#e07b00'],['Low','#1a8c3a']]);
+  a('status',[['Open','#1a73c8'],['WIP','#e07b00'],['Closed','#1a8c3a']]);
+  a('issue_type',[['Frontend','#1a73c8'],['Backend','#7c3aed'],['Database','#e07b00'],['Tester','#d93025'],['General','#1a8c3a']]);
+  a('user_type',[['Frontend Developer'],['Backend Developer'],['DB Engineer'],['Tester / QA'],['Team Lead'],['Project Manager'],['Mobile Developer'],['DevOps']]);
+}
+function seedUsers(){
+  const u=(n,t,e,c)=>DB.users.push({_id:uid(),_seq:nextSeq('users'),name:n,user_type:t,email:e,color:c,created_at:ts()});
+  u('Ravi Kumar','Frontend Developer','ravi@forestgh.in','#1a73c8');u('Priya Nair','Tester / QA','priya@forestgh.in','#d93025');
+  u('Arjun Das','Backend Developer','arjun@forestgh.in','#7c3aed');u('Meera Patel','DB Engineer','meera@forestgh.in','#e07b00');
+  u('Suresh Lead','Team Lead','suresh@forestgh.in','#1a8c3a');
+}
+function seedIssues(){
+  const u1=DB.users[0]?._id,u2=DB.users[1]?._id,u3=DB.users[2]?._id,u4=DB.users[3]?._id;
+  const raw=[
+    ['Asset','Back Arrow is not there each','Frontend','High','Open','frontend',u1],
+    ['Asset','Image blur issue','Frontend','Medium','Open','frontend',u1],
+    ['Asset','Both side camera not working','Backend','Medium','WIP','backend',u3],
+    ['Asset','Area & Perimeter shows NAN after collecting point','Database','Medium','WIP','database',u4],
+    ['Asset','Show on Map – Crash','Backend','High','Open','backend',u3],
+    ['Asset','Oops: Create folder crash after clearing storage','General','High','Open','open',null],
+    ['Asset','Image blur Issues in module','Frontend','Medium','Open','frontend',u1],
+    ['Asset','In each module Back options missing','Frontend','Medium','Open','web_test',u2],
+    ['Asset','Incharge photo – Front and Back photos required','General','Low','Open','mob_test',u2],
+    ['Asset','All Class & Category data should be cleared','Database','High','Open','database',u4],
+    ['Asset','Previous reading shown – Loader Issues','Backend','High','WIP','backend',u3],
+    ['General','Check network connection – Loading ok or not','Backend','Medium','Open','backend',u3],
+    ['General','Data Loader issues','Database','','Open','open',null],
+    ['General','One DB Sync Failure','Database','High','WIP','database',u4],
+    ['Forest Fire','Current location not shown in Fire Blue','Frontend','Medium','Open','frontend',u1],
+    ['App / Navigation','Navigation Issues','Frontend','High','Open','web_test',u2],
+    ['Vanamasta','Back arrow is need to be included','Frontend','','Open','open',null],
+    ['Vanamasta','UI Related Issues','Frontend','Medium','Open','frontend',u1],
+    ['FRA','Need to check','Tester','Low','Open','mob_test',u2],
+    ['Attenadnce','UI Related Issues','Frontend','Low','Open','complete',null],
+    ['General Survey','No Back arrow is not available','Frontend','Low','Open','complete',null],
+    ['Working Plan','No Back arrow is not available','Frontend','Low','Open','complete',null],
+  ];
+  raw.forEach(([m,d,it,p,s,sg,a])=>DB.issues.push({_id:uid(),_seq:nextSeq('issues'),module:m,description:d,issue_type:it,priority:p,status:s,stage:sg,remarks:'',assignee_id:a||null,modified_by:null,created_at:ts(),updated_at:ts()}));
+}
+
+// ── Helpers ───────────────────────────────────────
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const ts=()=>new Date().toLocaleString('sv-SE');
+const ini=n=>(n||'?').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+const gM=c=>DB.master.filter(m=>m.category===c).sort((a,b)=>a.value.localeCompare(b.value));
+const gUs=()=>[...DB.users].sort((a,b)=>a.name.localeCompare(b.name));
+const gU=id=>DB.users.find(u=>u._id===id);
+
+function toast(m,t='ok'){ const e=document.createElement('div'); e.className='tst'+(t==='err'?' err':t==='inf'?' inf':''); e.textContent=m; document.getElementById('tct').appendChild(e); setTimeout(()=>e.remove(),3400) }
+
+const STAGE_NEXT={open:'frontend',frontend:'backend',backend:'database',database:'web_test',web_test:'mob_test',mob_test:'complete'};
+const STAGES=[{key:'open',label:'Open',ico:'📂'},{key:'frontend',label:'Frontend Dev',ico:'🖥️'},{key:'backend',label:'Backend Dev',ico:'⚙️'},{key:'database',label:'Database',ico:'🗄️'},{key:'web_test',label:'Web Test',ico:'🌐'},{key:'mob_test',label:'Mob Test',ico:'📱'},{key:'complete',label:'Complete',ico:'✅'}];
+const SC={open:'#6a8c6a',frontend:'#1a73c8',backend:'#7c3aed',database:'#e07b00',web_test:'#0891b2',mob_test:'#d97706',complete:'#1a8c3a'};
+
+function pBadge(p){ if(!p)return`<span style="color:var(--mu)">—</span>`; const m=gM('priority').find(x=>x.value===p); const c=m?.color||'#6a8c6a'; return`<span class="badge" style="background:${c}22;color:${c};border:1px solid ${c}44"><span class="bdot"></span>${esc(p)}</span>` }
+function sBadge(s){ if(!s)return`<span style="color:var(--mu)">—</span>`; const m=gM('status').find(x=>x.value===s); const c=m?.color||'#6a8c6a'; return`<span class="badge" style="background:${c}18;color:${c};border:1px solid ${c}44">${esc(s)}</span>` }
+function tBadge(t){ if(!t)return`<span style="color:var(--mu)">—</span>`; const m=gM('issue_type').find(x=>x.value===t); const c=m?.color||'#6a8c6a'; return`<span class="badge" style="background:${c}18;color:${c};border:1px solid ${c}44">${esc(t)}</span>` }
+function stBadge(s){ const st=STAGES.find(x=>x.key===s)||{ico:'',label:s||'—'}; return`<span class="stb sg-${esc(s||'open')}">${st.ico} ${st.label}</span>` }
+function uChip(u){ if(!u)return`<span class="una">Unassigned</span>`; return`<span class="uc_"><span class="avsm" style="background:${esc(u.color)}">${esc(ini(u.name))}</span>${esc(u.name)}</span>` }
+
+// ── Selects ───────────────────────────────────────
+function pSel(id,items,vf,lf){ const el=document.getElementById(id); if(!el)return; const cur=el.value; while(el.options.length>1)el.remove(1); items.forEach(it=>el.appendChild(new Option(lf(it),vf(it)))); if(cur)el.value=cur }
+function populateSels(){
+  const ms=gM('module'),ts_=gM('issue_type'),ps=gM('priority'),ss=gM('status'),ut=gM('user_type'),us=gUs();
+  pSel('fMod',ms,m=>m.value,m=>m.value); pSel('fTyp',ts_,m=>m.value,m=>m.value);
+  pSel('fPri',ps,m=>m.value,m=>m.value); pSel('fSta',ss,m=>m.value,m=>m.value);
+  pSel('fAss',us,u=>u._id,u=>`${u.name} (${u.user_type||'—'})`);
+  pSel('fUTy',ut,m=>m.value,m=>m.value);
+  pSel('fMo',ms,m=>m.value,m=>m.value); pSel('fTy',ts_,m=>m.value,m=>m.value);
+  pSel('fPr',ps,m=>m.value,m=>m.value); pSel('fSt',ss,m=>m.value,m=>m.value);
+  pSel('fAs',us,u=>u._id,u=>`${u.name} (${u.user_type||'—'})`);
+  const fa=document.getElementById('fAs'); if(fa&&!fa.options[1]?.value==='__none__') fa.insertBefore(new Option('Unassigned','__none__'),fa.options[1]);
+  const cu=document.getElementById('cuSel'); const cuCur=cu.value; while(cu.options.length>1)cu.remove(1); us.forEach(u=>cu.appendChild(new Option(`${u.name} · ${u.user_type||'—'}`,u._id))); if(cuCur)cu.value=cuCur;
+  pSel('hUsr',us,u=>u._id,u=>u.name);
+}
+
+// ── Views ─────────────────────────────────────────
+function sv(v){
+  curView=v;
+  ['issues','pipeline','users','history','master','config'].forEach(n=>{
+    const el=document.getElementById('view-'+n); if(el)el.style.display=n===v?'block':'none';
+    const nav=document.getElementById('nav-'+n); if(nav)nav.classList.toggle('ac',n===v);
+  });
+  if(v==='issues')  ri();
+  if(v==='pipeline')rp();
+  if(v==='users')   ru();
+  if(v==='history') rh();
+  if(v==='master')  rmv();
+  if(v==='config')  prefillConfig();
+}
+function sf_(val){ sv('issues'); document.getElementById('fSg').value=val; ri() }
+
+// ── Sort ──────────────────────────────────────────
+function sBy(c){ sDir=sCol===c?(sDir==='ASC'?'DESC':'ASC'):'ASC'; sCol=c; ri() }
+
+// ── Issues render ─────────────────────────────────
+function ri(){
+  const srch=document.getElementById('srch').value.toLowerCase();
+  const mo=document.getElementById('fMo').value, ty=document.getElementById('fTy').value;
+  const pr=document.getElementById('fPr').value, st=document.getElementById('fSt').value;
+  const sg=document.getElementById('fSg').value, as=document.getElementById('fAs').value;
+  let rows=[...DB.issues];
+  if(srch)rows=rows.filter(i=>(i.description+i.module+i.remarks).toLowerCase().includes(srch));
+  if(mo)rows=rows.filter(i=>i.module===mo); if(ty)rows=rows.filter(i=>i.issue_type===ty);
+  if(pr)rows=rows.filter(i=>i.priority===pr); if(st)rows=rows.filter(i=>i.status===st);
+  if(sg)rows=rows.filter(i=>i.stage===sg);
+  if(as==='__none__')rows=rows.filter(i=>!i.assignee_id); else if(as)rows=rows.filter(i=>i.assignee_id===as);
+  rows.sort((a,b)=>{ let av=a[sCol]??'',bv=b[sCol]??''; if(sCol==='_seq'){av=Number(av);bv=Number(bv)} const r=av<bv?-1:av>bv?1:0; return sDir==='ASC'?r:-r });
+  const tb=document.getElementById('issTbl'), em=document.getElementById('emptyI');
+  if(!rows.length){ tb.innerHTML=''; em.style.display='block'; document.getElementById('recC').textContent='0 issues' }
+  else{
+    em.style.display='none';
+    tb.innerHTML=rows.map((iss,i)=>{
+      const au=gU(iss.assignee_id), mu=gU(iss.modified_by), nx=STAGE_NEXT[iss.stage];
+      return`<tr style="animation-delay:${i*.02}s">
+        <td class="idc">${iss._seq||''}</td>
+        <td class="mdc">${esc(iss.module||'—')}</td>
+        <td class="dsc" title="${esc(iss.description||'')}">${esc(iss.description||'—')}</td>
+        <td>${tBadge(iss.issue_type)}</td><td>${pBadge(iss.priority)}</td><td>${sBadge(iss.status)}</td><td>${stBadge(iss.stage)}</td>
+        <td>${uChip(au)}</td><td>${mu?uChip(mu):'<span class="una">—</span>'}</td>
+        <td class="ac_">
+          ${nx?`<button class="btn bw_ bxs" title="Advance to ${(STAGES.find(s=>s.key===nx)||{label:nx}).label}" onclick="advStg('${iss._id}','${nx}')">▶</button>`:''}
+          <button class="btn bg_ bsm" onclick="editIssue('${iss._id}')">✎</button>
+          <button class="btn bd_ bsm" onclick="askDI('${iss._id}')">✕</button>
+        </td>
+      </tr>`;
+    }).join('');
+    document.getElementById('recC').textContent=`${rows.length} issue${rows.length!==1?'s':''}`;
+  }
+  updStats(); updSA();
+}
+
+async function advStg(id,nx){
+  const iss=DB.issues.find(i=>i._id===id); if(!iss)return;
+  const old=iss.stage; let ns=iss.status;
+  if(nx==='complete')ns='Closed'; else if(['frontend','backend','database','web_test','mob_test'].includes(nx))ns='WIP';
+  updR('issues',id,{stage:nx,status:ns,modified_by:curUid||null,updated_at:ts()});
+  const cs=STAGES.find(s=>s.key===old)||{label:old}, nxs=STAGES.find(s=>s.key===nx)||{label:nx};
+  addLog('stage',id,`Stage: ${cs.label} → ${nxs.label} (#${iss._seq||''})`);
+  toast(`#${iss._seq||''} → ${nxs.ico||''} ${nxs.label}`);
+  ri(); if(curView==='pipeline')rp(); await save();
+}
+
+function updStats(){
+  const a=DB.issues, cnt=fn=>a.filter(fn).length;
+  document.getElementById('s-tot').textContent=a.length;
+  document.getElementById('s-opn').textContent=cnt(i=>i.status?.toLowerCase()==='open');
+  document.getElementById('s-wip').textContent=cnt(i=>i.status?.toLowerCase()==='wip');
+  document.getElementById('s-web').textContent=cnt(i=>i.stage==='web_test');
+  document.getElementById('s-mob').textContent=cnt(i=>i.stage==='mob_test');
+  document.getElementById('s-don').textContent=cnt(i=>i.stage==='complete');
+  document.getElementById('s-hig').textContent=cnt(i=>i.priority?.toLowerCase()==='high');
+  document.getElementById('s-usr').textContent=DB.users.length;
+  const tot=a.length||1, done=cnt(i=>i.stage==='complete'), pct=Math.round(done/tot*100);
+  document.getElementById('prF').style.width=pct+'%';
+  document.getElementById('prL').textContent=`${pct}% complete (${done}/${a.length})`;
+  rpBar();
+}
+
+function rpBar(){
+  document.getElementById('pBar').innerHTML=STAGES.map(s=>{
+    const cnt=DB.issues.filter(i=>i.stage===s.key).length, c=SC[s.key]||'#666';
+    return`<div class="pst"><div class="pd" style="background:${c}18;border-color:${c}">${s.ico}</div><div class="pc" style="color:${c}">${cnt}</div><div class="pl">${s.label}</div></div>`;
+  }).join('');
+}
+
+function updateBadges(){
+  document.getElementById('nb-open').textContent=DB.issues.filter(i=>i.status?.toLowerCase()==='open').length;
+  document.getElementById('nb-pipe').textContent=DB.issues.filter(i=>!['open','complete'].includes(i.stage)).length;
+  document.getElementById('nb-users').textContent=DB.users.length;
+  document.getElementById('nb-hist').textContent=DB.history.length;
+}
+
+function updSA(){
+  ['_seq','module','priority','status','stage'].forEach(c=>{
+    const id='sa-'+c.replace('_seq','seq'); const el=document.getElementById(id); if(!el)return;
+    el.parentElement.classList.toggle('th-s',sCol===c);
+    el.textContent=sCol===c?(sDir==='ASC'?'↑':'↓'):'↕';
+  });
+}
+
+// ── Pipeline ──────────────────────────────────────
+function rp(){
+  document.getElementById('kanban').innerHTML=STAGES.map(s=>{
+    const c=SC[s.key]||'#666';
+    const rows=DB.issues.filter(i=>i.stage===s.key).sort((a,b)=>({High:1,Medium:2,Low:3}[a.priority]||4)-({High:1,Medium:2,Low:3}[b.priority]||4));
+    return`<div class="kc"><div class="kh" style="border-left:3px solid ${c}"><span>${s.ico}</span><span style="color:${c}">${s.label}</span><span class="khc" style="color:${c}">${rows.length}</span></div>
+    <div class="kb">${rows.map(iss=>{const u=gU(iss.assignee_id); return`<div class="kk" onclick="editIssue('${iss._id}')"><div class="kkid">#${iss._seq||''} · ${esc(iss.module||'')}</div><div class="kkd" title="${esc(iss.description)}">${esc(iss.description)}</div><div class="kkm">${iss.issue_type?tBadge(iss.issue_type):''}${iss.priority?pBadge(iss.priority):''}${u?uChip(u):''}</div></div>`}).join('')}${!rows.length?'<div style="padding:8px;color:var(--mu2);font-size:10px;text-align:center">Empty</div>':''}</div></div>`;
+  }).join('');
+}
+
+// ── Users ─────────────────────────────────────────
+function ru(){
+  const us=gUs(); document.querySelector('#view-users .pt').textContent=`Users (${us.length})`;
+  const g=document.getElementById('usersG');
+  if(!us.length){g.innerHTML='<div class="es" style="grid-column:1/-1"><div class="ei">👤</div><p>No users yet</p></div>';return}
+  g.innerHTML=us.map(u=>{
+    const ui=DB.issues.filter(i=>i.assignee_id===u._id);
+    const tot=ui.length, pnd=ui.filter(i=>i.stage!=='complete').length, don=ui.filter(i=>i.stage==='complete').length;
+    const pr=ui.filter(i=>i.stage!=='complete').sort((a,b)=>({High:1,Medium:2,Low:3}[a.priority]||4)-({High:1,Medium:2,Low:3}[b.priority]||4)).slice(0,5);
+    return`<div class="ucd" style="border-top:3px solid ${esc(u.color)}">
+      <div class="uch"><div class="uav" style="background:${esc(u.color)}">${esc(ini(u.name))}</div>
+      <div class="uci"><h3>${esc(u.name)}</h3><div style="font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px">${esc(u.user_type||'—')}</div>${u.email?`<div class="uem">${esc(u.email)}</div>`:''}</div></div>
+      <div class="ucs"><div class="ust"><div class="un" style="color:var(--ac)">${tot}</div><div class="ul">Total</div></div><div class="ust"><div class="un" style="color:var(--wn)">${pnd}</div><div class="ul">Pending</div></div><div class="ust"><div class="un" style="color:var(--ac)">${don}</div><div class="ul">Done</div></div></div>
+      ${pnd>0?`<div class="ps_"><div class="pst_">⏳ Pending (${pnd})</div>${pr.map(iss=>`<div class="pr_">${pBadge(iss.priority)}${stBadge(iss.stage)}<span class="pd_" title="${esc(iss.description)}">${esc(iss.description)}</span><span style="font-size:9px;color:var(--mu)">#${iss._seq||''}</span></div>`).join('')}${pnd>5?`<div style="font-size:9px;color:var(--mu);padding-top:3px">+${pnd-5} more…</div>`:''}</div>`:`<div style="font-size:10px;color:var(--ac);padding:7px 0;border-top:1px solid var(--bd)">✅ All resolved</div>`}
+      <div class="uca"><button class="btn bg_ bxs" onclick="editUser('${u._id}')" style="flex:1">✎ Edit</button><button class="btn bg_ bxs" onclick="filterUser('${u._id}')" style="flex:1">📋 Issues</button><button class="btn bd_ bxs" onclick="askDU('${u._id}')">✕</button></div>
+    </div>`;
+  }).join('');
+}
+function filterUser(id){ sv('issues'); document.getElementById('fAs').value=id; ri() }
+
+// ── History ───────────────────────────────────────
+function rh(){
+  const srch=document.getElementById('hSrch').value.toLowerCase();
+  const uid_=document.getElementById('hUsr').value, typ=document.getElementById('hTyp').value;
+  let rows=[...DB.history].sort((a,b)=>(b._seq||0)-(a._seq||0));
+  if(uid_)rows=rows.filter(r=>r.user_id===uid_); if(typ)rows=rows.filter(r=>r.action===typ);
+  if(srch)rows=rows.filter(r=>(r.detail+' '+(gU(r.user_id)?.name||'')).toLowerCase().includes(srch));
+  const el=document.getElementById('histL');
+  if(!rows.length){el.innerHTML='<div class="hem">📜 No activity yet</div>';return}
+  const cls={create:'hc',edit:'he',delete:'hd',stage:'hs'};
+  el.innerHTML=rows.slice(0,200).map((r,i)=>{
+    const u=gU(r.user_id); const actor=u?`<span style="display:inline-flex;align-items:center;gap:3px"><span style="width:13px;height:13px;border-radius:50%;background:${esc(u.color)};display:inline-flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">${esc(ini(u.name))}</span>${esc(u.name)}</span>`:'<span style="color:var(--mu)">System</span>';
+    return`<div class="hr_" style="animation-delay:${i*.015}s"><div class="hdot ${cls[r.action]||'hc'}" style="margin-top:5px"></div><div><div class="ht">${esc(r.detail)}</div><div class="hm">${actor}${r.issue_id?`<span>· Issue #${r.issue_id}</span>`:''}</div></div><div class="htm">${r.ts||''}</div></div>`;
+  }).join('');
+}
+
+// ── Master Data ───────────────────────────────────
+function rmv(){
+  [['module','mc-mod-cnt'],['issue_type','mc-type-cnt'],['priority','mc-pri-cnt'],['status','mc-sta-cnt'],['user_type','mc-uty-cnt']].forEach(([cat,cntId])=>{
+    const items=gM(cat); const el=document.getElementById('mc-'+cat); const cnt=document.getElementById(cntId);
+    if(cnt)cnt.textContent=items.length+' items';
+    if(!el)return;
+    if(!items.length){el.innerHTML=`<div class="mce">No ${cat} items. Add one below.</div>`;return}
+    el.innerHTML=items.map(it=>`<div class="mci">${it.color?`<span class="mcd" style="background:${esc(it.color)}"></span>`:'<span style="width:10px"></span>'}<span class="mcv">${esc(it.value)}</span><button class="btn bd_ bxs" onclick="delM('${esc(cat)}','${esc(it._id)}','${esc(it.value).replace(/'/g,"\\'")}')">✕</button></div>`).join('');
+  });
+}
+
+async function addM(cat){
+  if(!isAdmin){openAL();return}
+  const inp=document.getElementById('mi-'+cat); const val=(inp?.value||'').trim();
+  if(!val){toast('Enter a value first',true);inp?.focus();return}
+  if(gM(cat).find(m=>m.value.toLowerCase()===val.toLowerCase())){toast(`"${val}" already exists`,true);return}
+  const color=document.getElementById('mc-'+cat+'-col')?.value||'';
+  DB.master.push({_id:uid(),_seq:nextSeq('master'),category:cat,value:val,color,created_at:ts()});
+  inp.value=''; populateSels(); rmv(); toast(`"${val}" added ✓`); await save();
+}
+
+async function delM(cat,id,val){
+  if(!isAdmin){openAL();return}
+  const field={module:'module',issue_type:'issue_type',priority:'priority',status:'status'}[cat];
+  if(field){ const n=DB.issues.filter(i=>i[field]===val).length; if(n>0){toast(`Cannot delete — used by ${n} issue(s)`,true);return} }
+  if(cat==='user_type'){ const n=DB.users.filter(u=>u.user_type===val).length; if(n>0){toast(`Cannot delete — used by ${n} user(s)`,true);return} }
+  delR('master',id); populateSels(); rmv(); toast(`"${val}" deleted`); await save();
+}
+
+// ── Issue CRUD ────────────────────────────────────
+function openIM(){ document.getElementById('iMT').textContent='New Issue'; document.getElementById('eId').value=''; ['fMod','fTyp','fPri','fSta','fAss','fRem'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''}); document.getElementById('fDes').value=''; document.getElementById('fStg').value='open'; document.getElementById('iMod').classList.add('op') }
+function closeIM(){ document.getElementById('iMod').classList.remove('op') }
+
+function editIssue(id){ const iss=DB.issues.find(i=>i._id===id); if(!iss)return; document.getElementById('iMT').textContent=`Edit Issue #${iss._seq||''}`; document.getElementById('eId').value=id; document.getElementById('fMod').value=iss.module||''; document.getElementById('fTyp').value=iss.issue_type||''; document.getElementById('fDes').value=iss.description||''; document.getElementById('fPri').value=iss.priority||''; document.getElementById('fSta').value=iss.status||''; document.getElementById('fStg').value=iss.stage||'open'; document.getElementById('fAss').value=iss.assignee_id||''; document.getElementById('fRem').value=iss.remarks||''; document.getElementById('iMod').classList.add('op') }
+
+async function saveIssue(){
+  const id=document.getElementById('eId').value;
+  const mod=document.getElementById('fMod').value.trim(), itype=document.getElementById('fTyp').value;
+  const desc=document.getElementById('fDes').value.trim(), pri=document.getElementById('fPri').value;
+  const sta=document.getElementById('fSta').value, stg=document.getElementById('fStg').value;
+  const asgn=document.getElementById('fAss').value||null, rem=document.getElementById('fRem').value.trim();
+  if(!mod||!desc||!pri||!sta){toast('Fill all required (*) fields',true);return}
+  const btn=document.getElementById('savIBtn'); btn.disabled=true; btn.textContent='Saving…';
+  try{
+    if(id){
+      const old=DB.issues.find(i=>i._id===id)||{}; const ch=[];
+      if(old.status!==sta)ch.push(`Status→${sta}`); if(old.stage!==stg)ch.push(`Stage→${(STAGES.find(s=>s.key===stg)||{label:stg}).label}`);
+      if(old.priority!==pri)ch.push(`Priority→${pri}`); if(old.assignee_id!==asgn)ch.push(`Assigned→${gU(asgn)?.name||'None'}`);
+      updR('issues',id,{module:mod,issue_type:itype,description:desc,priority:pri,status:sta,stage:stg,remarks:rem,assignee_id:asgn,modified_by:curUid||null,updated_at:ts()});
+      addLog('edit',id,ch.length?`Edited #${old._seq||''}: ${ch.join(', ')}`:`Edited issue #${old._seq||''}`);
+      toast('Issue updated ✓');
+    }else{
+      const rec=addR('issues',{module:mod,issue_type:itype,description:desc,priority:pri,status:sta,stage:stg,remarks:rem,assignee_id:asgn,modified_by:curUid||null,created_at:ts(),updated_at:ts()});
+      addLog('create',rec._id,`Created: "${desc.slice(0,60)}" (#${rec._seq})`); toast('Issue added ✓');
+    }
+    closeIM(); populateSels(); ri(); await save();
+  }catch(e){toast('Error: '+e.message,true)}
+  btn.disabled=false; btn.textContent='💾 Save Issue';
+}
+
+function askDI(id){ const i=DB.issues.find(x=>x._id===id); confCb=async()=>{addLog('delete',id,`Deleted: "${(i?.description||'').slice(0,60)}" (#${i?._seq||''})`);delR('issues',id);ri();toast('Issue deleted');await save()}; document.getElementById('cT').textContent='Delete Issue'; document.getElementById('cMsg').textContent=`Delete "${(i?.description||'').slice(0,50)}"? Cannot be undone.`; document.getElementById('cMod').classList.add('op') }
+
+// ── User CRUD ─────────────────────────────────────
+function openUM(){ document.getElementById('uMT').textContent='Add User'; document.getElementById('eUId').value=''; document.getElementById('fUNm').value=''; document.getElementById('fUEm').value=''; document.getElementById('fUTy').value=''; document.getElementById('fUCo').value='#1a8c3a'; document.getElementById('uMod').classList.add('op') }
+function closeUM(){ document.getElementById('uMod').classList.remove('op') }
+function editUser(id){ const u=DB.users.find(x=>x._id===id); if(!u)return; document.getElementById('uMT').textContent='Edit User'; document.getElementById('eUId').value=u._id; document.getElementById('fUNm').value=u.name||''; document.getElementById('fUTy').value=u.user_type||''; document.getElementById('fUEm').value=u.email||''; document.getElementById('fUCo').value=u.color||'#1a8c3a'; document.getElementById('uMod').classList.add('op') }
+
+async function saveUser(){ const id=document.getElementById('eUId').value,name=document.getElementById('fUNm').value.trim(),ut=document.getElementById('fUTy').value,email=document.getElementById('fUEm').value.trim(),color=document.getElementById('fUCo').value; if(!name){toast('Name required',true);return} if(id)updR('users',id,{name,user_type:ut,email,color}); else addR('users',{name,user_type:ut,email,color,created_at:ts()}); closeUM();populateSels();ru();updateBadges();toast(id?'User updated ✓':'User added ✓');await save() }
+function askDU(id){ const u=DB.users.find(x=>x._id===id); confCb=async()=>{DB.issues.filter(i=>i.assignee_id===id).forEach(i=>updR('issues',i._id,{assignee_id:null}));delR('users',id);populateSels();ru();ri();updateBadges();toast('User deleted');await save()}; document.getElementById('cT').textContent=`Delete ${u?.name||'User'}`; document.getElementById('cMsg').textContent=`Delete "${u?.name}"? Their issues will be unassigned.`; document.getElementById('cMod').classList.add('op') }
+
+// ── Active User ───────────────────────────────────
+function onUC(){ curUid=document.getElementById('cuSel').value||null; if(curUid){const u=gU(curUid);document.getElementById('cuWho').innerHTML=u?`<span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:50%;background:${esc(u.color)};display:inline-flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">${esc(ini(u.name))}</span><span style="color:#a3d9a5">${esc(u.name)}</span></span>`:'';toast(`Active: ${u?.name||'?'}`)}else document.getElementById('cuWho').textContent='' }
+
+// ── Admin ─────────────────────────────────────────
+function ra(fn){ if(isAdmin){fn();return} pendAdmin=fn; openAL() }
+function openAL(){ document.getElementById('aloEl').style.display='flex'; document.getElementById('aPw').value=''; document.getElementById('lErr').style.display='none'; setTimeout(()=>document.getElementById('aPw').focus(),100) }
+function closeAL(){ document.getElementById('aloEl').style.display='none'; pendAdmin=null }
+function doLogin(){ if(document.getElementById('aPw').value===(CFG.adminPw||'admin123')){isAdmin=true;document.getElementById('alnBtn').style.display='none';document.getElementById('aoutBtn').style.display='flex';closeAL();toast('Admin access granted ✓');if(pendAdmin){pendAdmin();pendAdmin=null}}else{document.getElementById('lErr').style.display='block';document.getElementById('aPw').value='';document.getElementById('aPw').focus()} }
+function aLogout(){ isAdmin=false;document.getElementById('alnBtn').style.display='flex';document.getElementById('aoutBtn').style.display='none';if(curView==='master')sv('issues');toast('Admin logged out') }
+
+// ── Confirm ───────────────────────────────────────
+function closeCnf(){ document.getElementById('cMod').classList.remove('op'); confCb=null }
+async function doCnf(){ if(confCb)await confCb(); closeCnf() }
+
+// ── Export CSV ────────────────────────────────────
+function expCSV(){ const rows=[...DB.issues].sort((a,b)=>(a._seq||0)-(b._seq||0)); const hdr=['#','Module','Type','Description','Priority','Status','Stage','Assigned','Remarks','Created']; const csv=[hdr,...rows.map(r=>[r._seq||'',r.module,r.issue_type,`"${(r.description||'').replace(/"/g,'""')}"`,r.priority,r.status,r.stage,gU(r.assignee_id)?.name||'',`"${(r.remarks||'').replace(/"/g,'""')}"`,r.created_at])].map(r=>r.join(',')).join('\n'); const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='forestgh_issues.csv';a.click();toast('CSV exported ✓') }
+
+// ── Backdrop close ────────────────────────────────
+['iMod','uMod','cMod'].forEach(id=>{ document.getElementById(id)?.addEventListener('click',e=>{ if(e.target!==e.currentTarget)return; if(id==='cMod')closeCnf(); else if(id==='iMod')closeIM(); else closeUM() }) });
+document.getElementById('aloEl').addEventListener('click',e=>{ if(e.target===e.currentTarget)closeAL() });
+
+// ── Boot ──────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
